@@ -30,6 +30,12 @@ $(function() {
       this.div = div;
       L.DomEvent.disableClickPropagation(div);
       L.DomEvent.disableScrollPropagation(div);
+
+      $(div).find('select').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        map.fire( 'selection-change', { data: this.value } );
+      });
+
       return div;
     },
 
@@ -39,6 +45,7 @@ $(function() {
 
     setPilots: function(data) {
       if( !(data && Array.isArray(data)) ) return;
+      this.data = data;
       var $select = $(this.div).find('select')
       filter = $(this.div).find('input').val().trim().toLowerCase()
       selected = $select.val()
@@ -55,6 +62,14 @@ $(function() {
       });
       selected = $select.val(selected)
     },
+
+    getPilotByCallsign: function(callsign) {
+      if( !this.data ) return;
+      return this.data.find( function(element) {
+        return element.callsign === callsign;
+      })
+    },
+
   })
 
   var GenericACIcon = L.icon({
@@ -158,8 +173,8 @@ $(function() {
   })
 
   map = new L.Map('map', {
-    fadeAnimation: false,
-    zoomAnimation: false,
+    fadeAnimation: true,
+    zoomAnimation: true,
   });
 
   var baselayer = {
@@ -218,9 +233,9 @@ $(function() {
 
   var lat = Number(getUrlParameter('lat')) || 53.5,
       lng = Number(getUrlParameter('lng')) || 10,
-      zoom = Number(getUrlParameter('zoom')) || 2,
+      zoom = Number(getUrlParameter('zoom')) || 3,
       server = getUrlParameter('server') || 'mpserver51.flightgear.org',
-      refresh = Number(getUrlParameter('refresh')) || 0;
+      refresh = Number(getUrlParameter('refresh')) || 2;
 
   map
     .setView(new L.LatLng(lat,lng),zoom)
@@ -236,11 +251,16 @@ $(function() {
 
   map.addLayer(mpAircraftLayer)
 
-  var pilotList = new PilotList({ });
+  var pilotList = new PilotList({ position: 'topleft' });
   pilotList.addTo(map)
 
   mpAircraftLayer.on('mpdata',function(evt) {
     pilotList.setPilots(evt.data.clients)
+  });
+
+  map.on('selection-change', function(evt) {
+    var pilot = pilotList.getPilotByCallsign( evt.data )
+    map.panTo( L.latLng( pilot.geod.lat, pilot.geod.lng, { animate: true } ) ) 
   });
 
 })
