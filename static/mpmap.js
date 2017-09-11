@@ -228,6 +228,11 @@ $(function() {
                 opacity : 0.5,
                 bounds : L.latLngBounds(L.latLng(16.0, -179.0), L.latLng(72.0, -60.0)),
             }),
+
+    "Grid" : L.grid({
+	        redraw: 'moveend',
+                coordStyle: 'DMS',
+             }),
   }
 
 
