@@ -18,6 +18,7 @@
   "author": "Torsten Dreyer <torsten@t3r.de>",
   "license": "GPL-2.0+",
   "dependencies": {
+    "debug": "^3.0.1",
     "express": "^4.15.4",
     "helmet": "^3.8.1",
     "math3d": "^0.2.2",
