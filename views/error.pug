@@ -1,0 +1,27 @@
+extends bootstrap
+
+block header
+	title !{message} (!{error.status})
+	style(type='text/css').
+		body {
+			background: url(/assets/img/error.jpg) no-repeat center center fixed; 
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+			color: white;
+		}
+		pre {
+			color: gray;
+		}
+		pre {
+			opacity: 0.8;
+			color: #000;
+		}
+
+block container
+	div.container-fluid
+		h1 Something has gone wrong.
+		h2 !{message} (!{error.status})
+		if error.stack
+			pre #{error.stack}
