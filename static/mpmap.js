@@ -146,7 +146,8 @@ $(function() {
     _setPos : function(pos) {
       L.Marker.prototype._setPos.call(this, pos);
       if (L.DomUtil.TRANSFORM) {
-        this._icon.style[L.DomUtil.TRANSFORM] += ' rotate(' + this.options.data.oriA.z + 'deg)';
+        this._icon.style[L.DomUtil.TRANSFORM] += ' rotate(' + this.options.data.oriA.z + 'deg)'
+        this._icon.style["transform-origin"] = "50% 50%"
       }
     },
   })
