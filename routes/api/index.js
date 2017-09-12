@@ -49,8 +49,7 @@ function ResolveDNS( name, type ) {
 
 router.route('/stat/').get(function(req, res) {
 
-  var response = {
-  }
+  var srvRecords = {}
   var dnsname = "_fgms._udp.flightgear.org";
 
   ResolveDNS(dnsname, "SRV")
@@ -59,27 +58,30 @@ router.route('/stat/').get(function(req, res) {
     var prms = []
     var entries = data.entries || []
 
+
     entries.sort( function(a,b) {
       return a.name.localeCompare(b.name)
     })
 
     entries.forEach( function(entry) {
       if( entry.port <= 0 ) return
-      prms.push( ResolveDNS(entry.name,"A") )
+      srvRecords[entry.name] = entry
       prms.push( ResolveDNS(entry.name,"TXT") )
-      response[entry.name] = { port: entry.port }
     })
 
     return Promise.all( prms )
   })
   .then( function( data ) {
+    var response = {}
     data.forEach(function(e) {
-      if( e.rqtype === "A" ) {
-        response[e.rqname].addresses = e.entries
-      }
       if( e.rqtype === "TXT" ) {
         var b = new Buffer(e.entries[0][0].split("=")[1],'base64')
-        response[e.rqname].data = JSON.parse(b.toString())
+        var data = JSON.parse(b.toString())
+        response[data.name] = {
+          dn: e.rqname,
+          'location': data.location,
+          port: srvRecords[e.rqname].port
+        }
       }
     })
     return res.json(response)

@@ -15,7 +15,59 @@ $(function() {
     }
   };
 
-  var PilotList = L.Control.extend({
+  L.ServerList = L.Control.extend({
+    initialize: function(pos, options) {
+      L.Control.prototype.initialize.call(this,pos);
+      L.Util.setOptions(this, options);
+    },
+
+    onAdd: function(map) {
+      var div = L.DomUtil.create( 'div', 'fg-server-select leaflet-bar' );
+      div.innerHTML =
+                '<select></select>'
+                ;
+      this.div = div;
+      L.DomEvent.disableClickPropagation(div);
+      L.DomEvent.disableScrollPropagation(div);
+      $select = $(div).find('select')
+      this._fill($select)
+
+      $select.on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        map.fire( 'server-selection-change', { data: this.value } );
+      });
+
+      return div;
+    },
+
+    onRemove: function(map) {
+        // TODO: Implement me!
+    },
+
+    _fill: function($select) {
+      $.ajax( "/api/stat/", {
+        context: this,
+        success: function(data) {
+          this._serverList = data
+          for( var name in data ) {
+            $select.append($('<option>', {
+              value: name,
+              text: name + ' (' + data[name].location + ')'
+             }));
+          }
+        },
+        error: function(a,b,c) {
+          console.log("AJAX error", a,b,c)
+        },
+        timeout: 30000,
+      })
+    },
+
+  })
+
+  L.serverList = function(options) { return new L.ServerList(options) }
+
+  L.PilotList = L.Control.extend({
     initialize: function(pos, options) {
       L.Control.prototype.initialize.call(this,pos);
       L.Util.setOptions(this, options);
@@ -33,7 +85,7 @@ $(function() {
 
       $(div).find('select').on('change', function (e) {
         var optionSelected = $("option:selected", this);
-        map.fire( 'selection-change', { data: this.value } );
+        map.fire( 'pilot-selection-change', { data: this.value } );
       });
 
       return div;
@@ -51,7 +103,7 @@ $(function() {
       selected = $select.val()
       $select.find('option').remove()
       data.forEach( function(pilot) {
-        if( filter && filter.length && 
+        if( filter && filter.length &&
             pilot.callsign.toLowerCase().indexOf(filter) === -1  &&
             pilot.model.toLowerCase().indexOf(filter) === -1 )
           return;
@@ -71,6 +123,7 @@ $(function() {
     },
 
   })
+  L.pilotList = function(options) { return new L.PilotList(options) }
 
   var GenericACIcon = L.icon({
     iconUrl: 'acicons/fg_generic_craft.png',
@@ -172,6 +225,8 @@ $(function() {
 
   })
 
+  L.mpAircraftLayer = function(layers,options) { return new L.MPAircraftLayer(layers,options) }
+
   map = new L.Map('map', {
     fadeAnimation: true,
     zoomAnimation: true,
@@ -248,24 +303,22 @@ $(function() {
 
   L.control.layers(baselayer, overlays).addTo(map);
 
+  var pilotList = L.pilotList({ position: 'topleft' }).addTo(map)
 
-  var mpAircraftLayer = new L.MPAircraftLayer(null,{
+  L.mpAircraftLayer(null,{
     mpServer: server,
     refresh: refresh
   })
-
-  map.addLayer(mpAircraftLayer)
-
-  var pilotList = new PilotList({ position: 'topleft' });
-  pilotList.addTo(map)
-
-  mpAircraftLayer.on('mpdata',function(evt) {
+  .on('mpdata',function(evt) {
     pilotList.setPilots(evt.data.clients)
+  })
+  .addTo(map)
+
+  map.on('pilot-selection-change', function(evt) {
+    var pilot = pilotList.getPilotByCallsign( evt.data )
+    map.panTo( L.latLng( pilot.geod.lat, pilot.geod.lng, { animate: true } ) )
   });
 
-  map.on('selection-change', function(evt) {
-    var pilot = pilotList.getPilotByCallsign( evt.data )
-    map.panTo( L.latLng( pilot.geod.lat, pilot.geod.lng, { animate: true } ) ) 
-  });
+  L.serverList({ position: 'bottomleft' }).addTo(map)
 
 })
