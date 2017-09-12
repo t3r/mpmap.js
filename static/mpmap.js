@@ -22,7 +22,7 @@ $(function() {
     },
 
     onAdd: function(map) {
-      var div = L.DomUtil.create( 'div', 'fg-server-select leaflet-bar' );
+      var div = L.DomUtil.create( 'div', 'fg-server-list leaflet-bar' );
       div.innerHTML =
                 '<select></select>'
                 ;
