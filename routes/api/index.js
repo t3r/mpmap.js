@@ -36,16 +36,13 @@ function GetCachedStatus( server, port ) {
     StatusCache.get( server, function(err,val) {
       if( err ) return reject(err)
       if( val ) {
-        console.log("cache hit for ", server )
         return resolve(val)
       }
 
-      console.log("cache miss for ", server )
       MpServerCli(server,port)
       .then(function(data) {
         StatusCache.set( server, data, function(err,success) {
           if( err ) return reject(err)
-          console.log("cache set for ", server )
           resolve(data)
         })
       })
