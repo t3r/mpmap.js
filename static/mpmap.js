@@ -52,7 +52,8 @@ $(function() {
           for( var name in data ) {
             $select.append($('<option>', {
               value: name,
-              text: name + ' (' + data[name].location + ')'
+              text: name + ' (' + data[name].location + ')',
+              selected: data[name].dn === this.options.selected,
              }));
           }
         },
@@ -319,6 +320,6 @@ $(function() {
     map.panTo( L.latLng( pilot.geod.lat, pilot.geod.lng, { animate: true } ) )
   });
 
-  L.serverList({ position: 'bottomleft' }).addTo(map)
+  L.serverList({ position: 'bottomleft', selected: server }).addTo(map)
 
 })
