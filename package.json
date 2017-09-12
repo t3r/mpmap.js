@@ -2,13 +2,11 @@
   "name": "mpmap.js",
   "version": "1.0.0",
   "description": "FlightGear Multiplayer Map - the Node.js way",
+  "homepage": "https://mpmap03.flightgear.org/",
   "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "http://fixme.git/"
+    "url": "https://git.code.sf.net/p/flightgear/mpmap.js"
   },
   "keywords": [
     "flightgear",
@@ -18,6 +16,7 @@
   "author": "Torsten Dreyer <torsten@t3r.de>",
   "license": "GPL-2.0+",
   "dependencies": {
+    "bower": "^1.8.0",
     "debug": "^3.0.1",
     "dns": "^0.2.2",
     "express": "^4.15.4",
@@ -27,5 +26,9 @@
     "node-cache": "^4.1.1",
     "pug": "^2.0.0-rc.4",
     "serve-favicon": "^2.4.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node_modules/.bin/bower install"
   }
 }

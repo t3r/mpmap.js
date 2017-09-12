@@ -1,0 +1,12 @@
+{
+  "name": "mpmap.js",
+  "description": "FlightGear Multiplayer Map - the Node.js way",
+  "version": "1.0.0",
+  "homepage": "https://mpmap03.flightgear.org/",
+  "license": "GPL-2.0+",
+  "private": false,
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "leaflet": "^1.2.0"
+  }
+}
