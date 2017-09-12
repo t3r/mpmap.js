@@ -19,6 +19,7 @@
   "license": "GPL-2.0+",
   "dependencies": {
     "debug": "^3.0.1",
+    "dns": "^0.2.2",
     "express": "^4.15.4",
     "helmet": "^3.8.1",
     "math3d": "^0.2.2",
