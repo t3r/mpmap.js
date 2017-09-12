@@ -45,7 +45,7 @@ $(function() {
     },
 
     _fill: function($select) {
-      $.ajax( "/api/stat/", {
+      $.ajax( "api/stat/", {
         context: this,
         success: function(data) {
           this._serverList = data
@@ -187,7 +187,7 @@ $(function() {
     },
 
     _loadData: function() {
-      $.ajax( "/api/stat/" + this.options.mpServer, {
+      $.ajax( "api/stat/" + this.options.mpServer, {
         context: this,
         success: function(data) {
           data.clients.sort(function(a,b) {
