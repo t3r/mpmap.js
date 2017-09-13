@@ -42,14 +42,15 @@ $(function() {
         maxZoom: 18,
         attribution: 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.',
       }),
+  }
+
+  var overlays = {
     "Terrain": new L.TileLayer('http://c.tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png', {
         minZoom: 0,
         maxZoom: 18,
         attribution: 'Map data &copy; <a target="_blank" href="http://openstreetmap.org">OpenStreetMap</a> contributors'
       }),
-  }
 
-  var overlays = {
     "OpenAIP":  new L.TileLayer("http://{s}.tile.maps.openaip.net/geowebcache/service/tms/1.0.0/openaip_basemap@EPSG%3A900913@png/{z}/{x}/{y}.png", {
                 maxZoom: 14,
                 minZoom: 5,
