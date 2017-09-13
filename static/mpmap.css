@@ -16,6 +16,7 @@ html, body, #wrapper {
   border: 1px solid gray;
   border-radius: 5px;
   font-size: 90%;
+  white-space: nowrap;
 }
 
 .fg-pilot-list {
