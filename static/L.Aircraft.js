@@ -129,6 +129,7 @@ L.AircraftLabel = L.Marker.extend({
     options.icon = L.divIcon({
       className: 'fg-aircraft-label',
       html: '',
+      iconSize: null,
       iconAnchor: [ -10, -10 ],
     })
     L.Marker.prototype.initialize.call(this,L.latLng(0,0));
