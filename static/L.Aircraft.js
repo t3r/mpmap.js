@@ -1,4 +1,3 @@
-
 /* Rotating aircraft with automatic icon selection */
 L.AircraftMarker = L.Marker.extend({
 
@@ -11,7 +10,7 @@ L.AircraftMarker = L.Marker.extend({
       popupAnchor: [0, -20],
     })
     options.title = options.title || options.callsign + ' (' + options.model + ')'
-    options.alt = options.alt || 'callsign: ' + options.callsign + ', model: ' + options.model 
+    options.alt = options.alt || 'callsign: ' + options.callsign + ', model: ' + options.model
     L.Marker.prototype.initialize.call(this,L.latLng(0,0))
     L.Util.setOptions(this, options)
     this.heading = 0
@@ -101,9 +100,9 @@ L.AircraftMarker = L.Marker.extend({
     "LZ-129": "blimp",
     "Excelsior-model": "blimp",
 
-    "mp-nimitz": "carrier",
-    "mp-eisenhower": "carrier",
-    "mp-foch": "carrier",
+    "mp-nimitz": "fg_carrier",
+    "mp-eisenhower": "fg_carrier",
+    "mp-foch": "fg_carrier",
 
     "OV10": "ov10",
     "OV10_USAFE": "ov10",
@@ -111,17 +110,33 @@ L.AircraftMarker = L.Marker.extend({
     "KC135": "kc135",
     "ch53e-model": "ch53e",
     "E3B": "e3b",
+    "ufo": "ufo",
 
     "atc-tower": "atc",
-    "atc-tower2": "atc", 
+    "atc-tower2": "atc",
     "mibs": "atc",
-    "atc": "atc", 
-    "OpenRadar": "atc", 
+    "atc": "atc",
+    "OpenRadar": "atc",
     "ATC-pie": "atc",
   }
 })
 
 L.aircraftMarker = function(options) { return new L.AircraftMarker(options) }
+
+L.AircraftCircleMarker = L.CircleMarker.extend({
+  initialize: function(options) {
+    options.title = options.title || options.callsign + ' (' + options.model + ')'
+    options.alt = options.alt || 'callsign: ' + options.callsign + ', model: ' + options.model
+    L.CircleMarker.prototype.initialize.call(this,L.latLng(0,0))
+    L.Util.setOptions(this, options)
+  },
+
+  setProperties: function(properties,callsign,model) {
+    this.setLatLng(properties.latLng)
+  },
+})
+
+L.aircraftCircleMarker = function(options) { return new L.AircraftCircleMarker(options) }
 
 L.AircraftLabel = L.Marker.extend({
 
@@ -163,12 +178,43 @@ L.Aircraft = L.LayerGroup.extend({
     L.LayerGroup.prototype.initialize.call(this);
     L.Util.setOptions(this, options)
     this._history = []
-    this._marker = L.aircraftMarker(options)
+    this._aircraftMarker = L.aircraftMarker(options)
+    this._circleMarker = new L.aircraftCircleMarker(L.Util.extend({ radius: 20, fill: true, color: 'red', weight: 1 }, options))
+    this._circleMarker.setRadius(4)
+    this._marker = this._circleMarker;
     this._trail = L.polyline([],{color: '#008000', weight: 1, dashArray: '5,5,1,5'})
     this._label = L.aircraftLabel(options)
     this.addLayer( this._marker )
     this.addLayer( this._trail )
     this.addLayer( this._label )
+  },
+
+  onAdd: function(map) {
+    L.LayerGroup.prototype.onAdd.call(this,map);
+    map.on('zoomend', this._onMapZoomEnd, this )
+    this._setMarkerIcons( map.getZoom() )
+  },
+
+  onRemove: function(map) {
+    L.LayerGroup.prototype.onRemove.call(this,map);
+    map.off('zoomend', this._onMapZoomEnd, this )
+  },
+
+  _onMapZoomEnd: function(evt) {
+    this._setMarkerIcons( evt.target.getZoom() )
+  },
+
+  _setMarkerIcons: function(zoom) {
+    if( this._marker == this._circleMarker && zoom >= 5 ) {
+      this.removeLayer( this._marker )
+      this._marker = this._aircraftMarker;
+      this.addLayer( this._marker )
+    }
+    if( this._marker == this._aircraftMarker && zoom < 5 ) {
+      this.removeLayer( this._marker )
+      this._marker = this._circleMarker;
+      this.addLayer( this._marker )
+    }
   },
 
   setPosAltHeading: function( latLng, altitude, heading ) {
@@ -190,7 +236,8 @@ L.Aircraft = L.LayerGroup.extend({
       speed: speed,
       time: now,
     }
-    this._marker.setProperties( properties, this.options.callsign, this.options.model )
+    this._circleMarker.setProperties( properties, this.options.callsign, this.options.model )
+    this._aircraftMarker.setProperties( properties, this.options.callsign, this.options.model )
     this._label.setProperties( properties, this.options.callsign, this.options.model )
 
 
