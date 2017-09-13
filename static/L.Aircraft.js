@@ -145,8 +145,8 @@ L.AircraftLabel = L.Marker.extend({
 
   _makeHtml: function(properties,callsign,model) {
     return L.Util.template(
-         '<div><span>' + callsign + '</span>&nbsp;<span>' + model + '</span></div>' +
-         '<div><span>' + Math.round(properties.altitude/100) + '</span>&nbsp;<span>' + Math.round(properties.speed*this._mps2kts) + '</span></div>' +
+         '<div><span>' + callsign.toUpperCase() + '</span>&nbsp;<span>' + model.toUpperCase() + '</span></div>' +
+         '<div><span>F' + Math.round(properties.altitude/100) + '</span>&nbsp;<span>' + Math.round(properties.speed*this._mps2kts) + 'KT</span></div>' +
          '<div style="clear: both"></div>', properties )
   },
 })
