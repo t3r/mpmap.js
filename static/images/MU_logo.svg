@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="0.91 r13725"
+   version="1.1"
+   id="fgfs-logo"
+   height="100%"
+   width="100%"
+   sodipodi:docname="MU_logo.svg"
+   viewBox="0 0 200 200"
+   preserveAspectRatio="xMinYMin meet">
+  <title
+     id="title3935">FlightGear Logo</title>
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="3.3725372"
+     inkscape:cx="82.434934"
+     inkscape:cy="96.204864"
+     inkscape:document-units="px"
+     inkscape:current-layer="fgfs-logo"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>FlightGear Logo</dc:title>
+        <dc:date>2015-01-23</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>flightgear.org</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>flightgear.org</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>flightgear.org</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:identifier>flightgear.org/Logo</dc:identifier>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>The FlightGear Logo for Phi</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>Based on The FlightGear Logo
+Phi derived from http://commons.wikimedia.org/wiki/File:Phi_uc_lc.svg
+Vectorized: Torsten Dreyer</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+        <cc:license
+           rdf:resource="http://www.gnu.org/licenses/gpl-2.0.html" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <rect
+     style="fill:#ffffff"
+     id="bg"
+     width="200"
+     height="200"
+     x="0"
+     y="0" />
+  <rect
+     style="fill:#000000"
+     id="black"
+     width="75"
+     height="200"
+     x="0"
+     y="0" />
+  <path
+     id="yellow"
+     style="fill:#fbfc46"
+     d="m 0,-6.3652344e-5 25,0 L 25,24.999936 l -25,0 z M 0,49.999936 l 25,0 0,25 -25,0 z m 0,50 25,0 0,25.000004 -25,0 z m 0,50.000024 25,0 0,25 -25,0 z M 50,-6.3652344e-5 l 25,0 L 75,24.999936 l -25,0 z M 50,49.999936 l 25,0 0,25 -25,0 z m 0,50 25,0 0,25.000004 -25,0 z m 0,50.000024 25,0 0,25 -25,0 z M 25,24.999936 l 25,0 0,25 -25,0 z m 0,50 25,0 0,25 -25,0 z m 0,50.000004 25,0 0,25.00002 -25,0 z m 0,50.00002 25,0 0,25 -25,0 z"
+     inkscape:connector-curvature="0" />
+  <path
+     inkscape:connector-curvature="0"
+     id="path4150"
+     style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:125%;font-family:LMMathItalic10;-inkscape-font-specification:'LMMathItalic10, Italic';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#427ebf;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 178.68541,95.440726 c 0,-1.519756 -1.36779,-1.519756 -1.82371,-1.519756 -1.51976,0 -1.67174,0.607902 -2.12766,2.735562 -2.58359,9.878418 -5.31915,18.844988 -11.55015,18.844988 -4.10335,0 -4.55927,-3.95137 -4.55927,-6.99089 0,-3.34346 1.8237,-10.486317 3.03951,-15.805466 l 4.25532,-16.413373 c 0.45593,-2.279635 1.97568,-8.054711 2.58358,-10.334346 0.75988,-3.495441 2.27964,-9.270516 2.27964,-10.18237 0,-2.735563 -2.12766,-4.103344 -4.40729,-4.103344 -0.75988,0 -4.71125,0.151976 -5.92706,5.319149 l -7.14285,28.419452 -3.95137,15.501518 c -0.15198,0.75988 -7.44681,14.58967 -19.75684,14.58967 -7.59878,0 -11.2462,-5.0152 -11.2462,-13.22189 0,-4.407293 1.06383,-8.662612 2.12766,-12.917931 l 6.38298,-25.531914 c 0.75988,-3.191489 2.27963,-8.966564 2.27963,-9.726443 0,-2.583586 -1.8237,-4.103343 -4.40729,-4.103343 -0.45593,0 -4.71125,0.151976 -6.07903,5.471124 L 96.770515,143.46504 c -0.455927,1.82371 -0.455927,2.43161 -0.455927,2.43161 0,2.27964 1.671732,4.10334 4.255322,4.10334 3.19149,0 5.01519,-2.73556 5.31915,-3.19148 0.6079,-1.36779 2.58358,-9.27052 8.35866,-32.67478 4.86322,4.10335 11.70213,4.71125 14.74164,4.71125 10.6383,0 16.56535,-6.8389 20.21276,-11.09422 1.36778,6.8389 6.99088,11.09422 13.67781,11.09422 5.31915,0 8.81459,-3.49544 11.2462,-8.35866 2.58359,-5.47113 4.55928,-15.045594 4.55928,-15.045594 z" />
+</svg>
