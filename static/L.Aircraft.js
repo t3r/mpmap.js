@@ -177,6 +177,7 @@ L.Aircraft = L.LayerGroup.extend({
     if( this._history.length > 0 ) {
       var last = this._history[this._history.length-1]
       var dist = last.latLng.distanceTo(latLng)
+      if( dist < 1 ) return; // slow moving target, track at least 1m steps
       var dt = now - last.time
       if( dt > 0 ) speed = dist / dt * 1000
     }
