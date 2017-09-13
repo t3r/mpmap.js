@@ -1,9 +1,9 @@
-# This is fgaware aka mpmap.js
+# This is FlightGear μ (mju) aka mpmap.js
 A Multiplayer Map for FlightGear based on node.js
 
 ## Requirements
 * nodejs >= 6.0
-* permission do perform DNS lookup
+* permission to perform DNS lookup
 * permission to do outbound connects (telnet to mpserverXX on port 5001) 
 
 ## Installation
