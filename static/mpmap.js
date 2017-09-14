@@ -102,6 +102,7 @@ $(function() {
 
   L.serverList({ position: 'bottomleft', selected: server }).addTo(map)
 
+  var retryCnt = 3
   function loadData() {
     $.ajax( "api/stat/" + server, {
       success: function(data) {
@@ -117,13 +118,21 @@ $(function() {
         }
       },
       error: function(a,b,c) {
-        console.log("AJAX error", a,b,c)
-        alert("Can't load multiplayer data, please reload page")
+        console.log("AJAX error, retry=", retryCnt,a,b,c)
+        if( retryCnt > 0 ) {
+          retryCnt--;
+          if( refresh > 0 ) {
+            setTimeout( function() {
+              loadData()
+            },refresh*1000)
+          }
+        } else {
+          alert("Can't load multiplayer data, please reload page")
+        }
       },
       timeout: 30000,
     })
   }
 
   loadData()
-
 })

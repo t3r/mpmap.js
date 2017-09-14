@@ -49,3 +49,4 @@ html, body, #wrapper {
 .fg-server-list select option[selected]{ font-weight:bold}
 
 .fg-server-list select option:nth-child(even) { background-color:#f5f5f5; }
+
