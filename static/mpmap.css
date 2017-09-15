@@ -50,3 +50,10 @@ html, body, #wrapper {
 
 .fg-server-list select option:nth-child(even) { background-color:#f5f5f5; }
 
+.fg-expired-ac {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0; }
+}

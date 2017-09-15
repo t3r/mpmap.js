@@ -19,7 +19,7 @@ $(function() {
       lng = Number(getUrlParameter('lng')) || 10,
       zoom = Number(getUrlParameter('zoom')) || 3,
       server = getUrlParameter('server') || 'mpserver51.flightgear.org',
-      refresh = Number(getUrlParameter('refresh')) || 2;
+      refresh = Number(getUrlParameter('refresh')) || 5;
 
   map = new L.Map('map', {
     fadeAnimation: true,

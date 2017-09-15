@@ -1,3 +1,5 @@
+'use strict;'
+
 L.MPAircraftLayer = L.LayerGroup.extend({
   initialize: function(layer, options) {
     L.LayerGroup.prototype.initialize.call(this,layer);
@@ -8,10 +10,28 @@ L.MPAircraftLayer = L.LayerGroup.extend({
   onAdd: function(map) {
     this._map = map
     this.on('mpdata', this._onData );
+    this._gc()
   },
 
   onRemove: function() {
+    if( this.gcTimeout ) clearTimeout( this.expTimeout )
     this.off('mpdata', this._onData );
+  },
+
+  _gc: function() {
+    var now = Date.now()
+    var expired = []
+    for( var callsign in this._aircraft ) {
+      var ac = this._aircraft[callsign]
+      if( now - ac.lastSeen > 30000 )
+        expired.push(callsign)
+    }
+    expired.forEach(function(callsign) {
+      this.removeLayer(this._aircraft[callsign])
+      delete (this._aircraft[callsign])
+    },this)
+    var self = this
+    this.gcTimeout = setTimeout( function() { self._gc() }, 1234 )
   },
 
   _onData: function(evt) {

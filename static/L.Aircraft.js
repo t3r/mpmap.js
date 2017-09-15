@@ -29,6 +29,12 @@ L.AircraftMarker = L.Marker.extend({
     this.setLatLng(properties.latLng)
   },
 
+  setClass: function(flag,c) {
+    if( !this._icon ) return
+    if( flag && !L.DomUtil.hasClass(this._icon,c) ) L.DomUtil.addClass(this._icon,c)
+    if( !flag && L.DomUtil.hasClass(this._icon,c) ) L.DomUtil.removeClass(this._icon,c)
+  },
+
   _modelIcons: {
     "bo105": "heli",
     "sikorsky76c": "heli",
@@ -134,6 +140,12 @@ L.AircraftCircleMarker = L.CircleMarker.extend({
   setProperties: function(properties,callsign,model) {
     this.setLatLng(properties.latLng)
   },
+
+  setClass: function(flag,c) {
+    if( !this._path ) return
+    if( flag && !L.DomUtil.hasClass(this._path,c) ) L.DomUtil.addClass(this._path,c)
+    if( !flag && L.DomUtil.hasClass(this._path,c) ) L.DomUtil.removeClass(this._path,c)
+  },
 })
 
 L.aircraftCircleMarker = function(options) { return new L.AircraftCircleMarker(options) }
@@ -187,17 +199,33 @@ L.Aircraft = L.LayerGroup.extend({
     this.addLayer( this._marker )
     this.addLayer( this._trail )
     this.addLayer( this._label )
+    this.firstSeen = this.lastSeen = Date.now()
+    this.expTimeout = 0
   },
 
   onAdd: function(map) {
     L.LayerGroup.prototype.onAdd.call(this,map);
     map.on('zoomend', this._onMapZoomEnd, this )
     this._setMarkerIcons( map.getZoom() )
+    this._checkExpired()
   },
 
   onRemove: function(map) {
+    if( this.expTimeout ) clearTimeout( this.expTimeout )
     L.LayerGroup.prototype.onRemove.call(this,map);
     map.off('zoomend', this._onMapZoomEnd, this )
+  },
+
+  _checkExpired: function() {
+    var age = Date.now() - this.lastSeen
+    this._setExpired( age > 10000, "fg-expired-ac" )
+    var self = this
+    this.expTimeout = setTimeout( function() { self._checkExpired() }, 1000 )
+  },
+
+  _setExpired: function(bool,c) {
+    this._aircraftMarker.setClass(bool,c)
+    this._circleMarker.setClass(bool,c)
   },
 
   _onMapZoomEnd: function(evt) {
@@ -220,6 +248,8 @@ L.Aircraft = L.LayerGroup.extend({
   setPosAltHeading: function( latLng, altitude, heading ) {
 
     var now = Date.now()
+    this.lastSeen = now
+
     var speed = 0
     if( this._history.length > 0 ) {
       var last = this._history[this._history.length-1]
