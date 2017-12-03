@@ -15,9 +15,10 @@
       $select = $(div).find('select')
       this._fill($select)
 
+      var self = this
       $select.on('change', function (e) {
         var optionSelected = $("option:selected", this);
-        map.fire( 'server-selection-change', { data: this.value } );
+        map.fire( 'server-selection-change', { server: self._serverList[this.value] } );
       });
 
       return div;

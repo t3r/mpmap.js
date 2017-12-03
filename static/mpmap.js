@@ -26,6 +26,10 @@ $(function() {
     zoomAnimation: true,
   });
 
+  map.on('server-selection-change', function(evt) {
+    server = evt.server.dn
+  })
+
   var baselayer = {
     "OpenStreetMap": new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         minZoom: 0,
@@ -100,7 +104,7 @@ $(function() {
     map.panTo( L.latLng( pilot.geod.lat, pilot.geod.lng, { animate: true } ) )
   });
 
-  L.serverList({ position: 'bottomleft', selected: server }).addTo(map)
+  var serverList = L.serverList({ position: 'bottomleft', selected: server }).addTo(map)
 
   var retryCnt = 3
   function loadData() {

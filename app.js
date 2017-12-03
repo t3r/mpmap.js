@@ -48,6 +48,9 @@ app.set('view engine', 'pug');
 // handle favicon
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 app.use(logger('dev'));
+app.use('/l', express.static(path.join(__dirname, 'node_modules/leaflet/dist')));
+app.use('/lmc', express.static(path.join(__dirname, 'node_modules/leaflet.markercluster/dist')));
+app.use('/j', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
 app.use(express.static(path.join(__dirname, 'static')));
 
 app.use('/api', require('./routes/api'));
