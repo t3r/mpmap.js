@@ -106,4 +106,14 @@ function onListening() {
   debug('Listening on ' + bind);
 }
 
+process.on('SIGTERM', () => {
+  console.log('Received SIGTERM, shutting down');
+  process.exit(0);
+});
+
+process.on('SIGINT', () => {
+  console.log('Received SIGINT, shutting down');
+  process.exit(0);
+});
+
 module.exports = server;
