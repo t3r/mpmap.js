@@ -72,7 +72,7 @@ _MPServerClient.prototype.Parse = function( line ) {
   this.geod.alt = Number(p1[5])
   this.pos = [ Number(p1[0]),Number(p1[1]),Number(p1[2]) ]
   this.oriQ = [ Number(p1[6]),Number(p1[7]),Number(p1[8]) ]
-  this.modelPath = p1[9]
+  this.modelPath = p1[9] || ""
   this.model = this.modelPath.split('/').pop().split('.')[0]
 
   angleAxis = new math3d.Vector3( this.oriQ[0], this.oriQ[1], this.oriQ[2] )
