@@ -29,8 +29,19 @@ don't like 8080? Use another port like this
 
 	app_port=4711 npm start
 
+## Running within docker
+If you have docker and docker-compose installed, simply type
+
+	docker-compose up --build
+
+and you are ready. Note: this exposes the app at port http://localhost:8086/
+
 ## Need help?
-contact the author(s) at the [flightgear-devel mailing list](https://sourceforge.net/projects/flightgear/lists/flightgear-devel "flightgear-devel")
+Contact the author(s) at the [flightgear-devel mailing list](https://sourceforge.net/projects/flightgear/lists/flightgear-devel "flightgear-devel")
+
+## Contributing
+Contributions are welcome through the [gitlab project](https://gitlab.com/t3r/mpmap/). If you want to support the running instance or any other
+FlightGear project requiring payed infrastructure, please [consider donating](https://liberapay.com/t3r). Any amount helps.
 
 ## Legal stuff
 mpmap.js is licensed under the GPL 2.0 or later. See [LICENSE](LICENSE)
