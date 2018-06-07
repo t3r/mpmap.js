@@ -34,8 +34,8 @@ $(function() {
   var lat = Number(getUrlParameter('lat')) || 53.5,
       lng = Number(getUrlParameter('lng')) || 10,
       zoom = Number(getUrlParameter('zoom')) || 3,
-      server = getUrlParameter('server') || 'mpserver51.flightgear.org',
-      refresh = Number(getUrlParameter('refresh')) || 5;
+      server = getUrlParameter('server') || 'mpserver01.flightgear.org',
+      refresh = Number(getUrlParameter('refresh')) || 10;
 
   map = new L.Map('map', {
     fadeAnimation: true,
@@ -62,6 +62,18 @@ $(function() {
         maxZoom: 18,
         attribution: 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.',
       }),
+    "Bing Aerial": L.tileLayer.bing({
+      bingMapsKey: 'AuHndJivZLbhhwqhbn03ulPuBBhVH1OTIAio6buoJ8v8pO1IuxZTr_tydkITmv2T',
+      imagerySet: 'Aerial',
+    }),
+    "Bing Hybrid": L.tileLayer.bing({
+      bingMapsKey: 'AuHndJivZLbhhwqhbn03ulPuBBhVH1OTIAio6buoJ8v8pO1IuxZTr_tydkITmv2T',
+      imagerySet: 'AerialWithLabelsOnDemand',
+    }),
+    "Bing Roads": L.tileLayer.bing({
+      bingMapsKey: 'AuHndJivZLbhhwqhbn03ulPuBBhVH1OTIAio6buoJ8v8pO1IuxZTr_tydkITmv2T',
+      imagerySet: 'RoadOnDemand',
+    }),
   }
 
   var overlays = {

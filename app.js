@@ -49,6 +49,7 @@ app.set('view engine', 'pug');
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
 app.use(logger('dev'));
 app.use('/l', express.static(path.join(__dirname, 'node_modules/leaflet/dist')));
+app.use('/lb', express.static(path.join(__dirname, 'node_modules/leaflet-bing-layer')));
 app.use('/j', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
 app.use(express.static(path.join(__dirname, 'static')));
 
