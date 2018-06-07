@@ -3,7 +3,7 @@ $(function() {
   L.Control.Donate = L.Control.extend({
     onAdd: function(map) {
         var root = L.DomUtil.create('div');
-        root.innerHTML = '<a target="_blank" href="https://liberapay.com/t3r/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>';
+        root.innerHTML = '<a href="https://liberapay.com/t3r/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>';
         return root;
     },
 
