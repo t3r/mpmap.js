@@ -4,6 +4,8 @@ version: '3.2'
 services:
   mpmap:
     image: registry.gitlab.com/t3r/mpmap/master:latest
+    build:
+      context: .
     read_only: true
     environment:
       - "node_env=production"
