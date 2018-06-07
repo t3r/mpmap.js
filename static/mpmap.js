@@ -1,5 +1,21 @@
 $(function() {
 
+  L.Control.Donate = L.Control.extend({
+    onAdd: function(map) {
+        var root = L.DomUtil.create('div');
+        root.innerHTML = '<a target="_blank" href="https://liberapay.com/t3r/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>';
+        return root;
+    },
+
+    onRemove: function(map) {
+        // Nothing to do here
+    }
+  });
+
+  L.control.donate = function(opts) {
+    return new L.Control.Donate(opts);
+  }
+
   var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),
@@ -105,6 +121,8 @@ $(function() {
   });
 
   var serverList = L.serverList({ position: 'bottomleft', selected: server }).addTo(map)
+  L.control.donate({ position: 'bottomleft' }).addTo(map);
+
 
   var retryCnt = 3
   function loadData() {
