@@ -81,7 +81,7 @@ $(function() {
                 transparent: true
             }),
 
-    "VFRMap.com Sectionals (US)" : new L.TileLayer('http://vfrmap.com/20170817/tiles/vfrc/{z}/{y}/{x}.jpg', {
+    "VFRMap.com Sectionals (US)" : new L.TileLayer('http://vfrmap.com/20180524/tiles/vfrc/{z}/{y}/{x}.jpg', {
                 maxZoom : 12,
                 minZoom : 3,
                 attribution : '&copy; <a target="_blank" href="http://vfrmap.com">VFRMap.com</a>',
@@ -90,7 +90,7 @@ $(function() {
                 bounds : L.latLngBounds(L.latLng(16.0, -179.0), L.latLng(72.0, -60.0)),
             }),
 
-    "VFRMap.com - Low IFR (US)" : new L.TileLayer('http://vfrmap.com/20170817/tiles/ifrlc/{z}/{y}/{x}.jpg', {
+    "VFRMap.com - Low IFR (US)" : new L.TileLayer('http://vfrmap.com/20180524/tiles/ifrlc/{z}/{y}/{x}.jpg', {
                 maxZoom : 12,
                 minZoom : 5,
                 attribution : '&copy; <a target="_blank" href="http://vfrmap.com">VFRMap.com</a>',
