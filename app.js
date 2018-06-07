@@ -45,9 +45,11 @@ app.use(helmet())
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.use(require('express-status-monitor')());
 // handle favicon
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
-app.use(logger('dev'));
+app.use(logger(process.env.node_env  === 'development' ? 'dev' : 'combined'));
+
 app.use('/l', express.static(path.join(__dirname, 'node_modules/leaflet/dist')));
 app.use('/lb', express.static(path.join(__dirname, 'node_modules/leaflet-bing-layer')));
 app.use('/j', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
