@@ -40,6 +40,7 @@ if( app.get('env') !== 'development' ) {
 
 app.set('trust proxy', 1)
 app.use(helmet())
+app.use(require('compression')())
 
 // view engine setup: pug
 app.set('views', path.join(__dirname, 'views'));

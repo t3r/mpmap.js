@@ -16,6 +16,7 @@
   "author": "Torsten Dreyer <torsten@t3r.de>",
   "license": "GPL-2.0+",
   "dependencies": {
+    "compression": "^1.7.2",
     "debug": "^3.0.1",
     "express": "^4.16.3",
     "express-status-monitor": "^1.0.1",
