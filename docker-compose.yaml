@@ -3,7 +3,7 @@ version: '3.4'
 
 services:
   mpmap:
-    image: flightgear/mpmap:latest
+    image: flightgear/mpmap.js:latest
     build:
       context: .
     read_only: true
