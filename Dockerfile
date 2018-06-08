@@ -9,7 +9,7 @@ ENV node_env=production
 
 WORKDIR /usr/local/app
 COPY package.json /usr/local/app
-RUN npm install
+RUN npm install --only=production
 COPY . /usr/local/app/
 
 USER nobody
