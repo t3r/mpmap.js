@@ -35,13 +35,26 @@ If you have docker and docker-compose installed, simply type
 	docker-compose up --build
 
 and you are ready. Note: this exposes the app at port http://localhost:8086/
+There are also ready to use docker images at [https://hub.docker.com/r/flightgear/mpmap.js/](https://hub.docker.com/r/flightgear/mpmap.js/).
+Run
+
+	docker run -p 8080:8080 flightgear/mpmap.js
+
+to have your own private multiplayer map at localhost:8080
+
+
+## Live Demo?
+This software runs at [http://mpmap03.flightgear.org/](http://mpmap03.flightgear.org/)
 
 ## Need help?
 Contact the author(s) at the [flightgear-devel mailing list](https://sourceforge.net/projects/flightgear/lists/flightgear-devel "flightgear-devel")
 
 ## Contributing
-Contributions are welcome through the [gitlab project](https://gitlab.com/t3r/mpmap/). If you want to support the running instance or any other
-FlightGear project requiring payed infrastructure, please [consider donating](https://liberapay.com/t3r). Any amount helps.
+Contributions are welcome through the [gitlab project](https://gitlab.com/t3r/mpmap/) 
+or the [github project](https://github.com/t3r/mpmap.js/)
+or the [sourceforge project](https://sourceforge.net/p/flightgear/mpmap.js/). 
+If you want to support the running instance or any other FlightGear project requiring payed infrastructure, please [consider donating](https://liberapay.com/t3r). 
+Any amount helps.
 
 ## Legal stuff
 mpmap.js is licensed under the GPL 2.0 or later. See [LICENSE](LICENSE)
