@@ -1,20 +1,21 @@
 # FlightGear multiplayer map
-version: '3.2'
+version: '3.4'
 
 services:
   mpmap:
-    image: registry.gitlab.com/t3r/mpmap/master:latest
+    image: flightgear/mpmap:latest
     build:
       context: .
     read_only: true
     environment:
       - "node_env=production"
       - "NODE_ENV=production"
-#    healthcheck:
-#      test: "wget -spider -q http://ui:8080/heath-check || exit 1"
-#      interval: 30s
-#      timeout: 10s
-#      retries: 2
+    healthcheck:
+      test: "curl -s http://localhost:8080/status||exit 1"
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 2
     ports:
       - "8086:8080"
     volumes:
