@@ -40,6 +40,7 @@ $(function() {
   map = new L.Map('map', {
     fadeAnimation: true,
     zoomAnimation: true,
+    zoomControl: false,
   });
 
   map.on('server-selection-change', function(evt) {
@@ -121,6 +122,9 @@ $(function() {
     .setView(new L.LatLng(lat,lng),zoom)
     .addLayer(baselayer["OpenStreetMap"]);
 
+  L.control.zoom({
+    position: 'topright',
+  }).addTo(map);
   L.control.layers(baselayer, overlays).addTo(map);
 
   var pilotList = L.pilotList({ position: 'topleft' }).addTo(map)

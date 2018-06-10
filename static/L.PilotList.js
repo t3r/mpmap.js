@@ -7,8 +7,8 @@
     onAdd: function(map) {
       var div = L.DomUtil.create( 'div', 'fg-pilot-list leaflet-bar' );
       div.innerHTML =
-                '<input type="text" placeholder="filter" size="10">'+
-                '<select size="10"></select>'
+                '<input type="text" placeholder="filter" size="20">'+
+                '<select size="30"></select>'
                 ;
       this.div = div;
       L.DomEvent.disableClickPropagation(div);
