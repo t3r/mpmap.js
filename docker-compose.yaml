@@ -11,7 +11,7 @@ services:
       - "node_env=production"
       - "NODE_ENV=production"
     healthcheck:
-      test: "curl -s http://localhost:8080/status||exit 1"
+      test: "curl -s http://localhost:8080/||exit 1"
       start_period: 10s
       interval: 10s
       timeout: 5s

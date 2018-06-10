@@ -116,4 +116,7 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
+console.log("Running as", process.env.node_env, "port", port )
+
+
 module.exports = server;
