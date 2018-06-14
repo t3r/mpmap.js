@@ -48,17 +48,17 @@ $(function() {
   })
 
   var baselayer = {
-    "OpenStreetMap": new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    "OpenStreetMap": new L.TileLayer('//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         minZoom: 0,
         maxZoom: 18,
-        attribution: 'Map data &copy; <a target="_blank" href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+        attribution: 'Map data &copy; <a target="_blank" href="//openstreetmap.org">OpenStreetMap</a> contributors'
       }),
-    "Carto Light": new L.TileLayer('http://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+    "Carto Light": new L.TileLayer('//a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
         minZoom: 0,
         maxZoom: 18,
         attribution: 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.',
       }),
-    "Carto Dark": new L.TileLayer('http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+    "Carto Dark": new L.TileLayer('//a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
         minZoom: 0,
         maxZoom: 18,
         attribution: 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.',
@@ -81,7 +81,7 @@ $(function() {
     "Terrain": new L.TileLayer('http://c.tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png', {
         minZoom: 0,
         maxZoom: 18,
-        attribution: 'Map data &copy; <a target="_blank" href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+        attribution: 'Map data &copy; <a target="_blank" href="//openstreetmap.org">OpenStreetMap</a> contributors'
       }),
 
     "OpenAIP":  new L.TileLayer("http://{s}.tile.maps.openaip.net/geowebcache/service/tms/1.0.0/openaip_basemap@EPSG%3A900913@png/{z}/{x}/{y}.png", {
