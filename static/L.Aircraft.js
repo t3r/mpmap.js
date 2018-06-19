@@ -1,39 +1,5 @@
-/* Rotating aircraft with automatic icon selection */
-L.AircraftMarker = L.Marker.extend({
-
-  initialize: function(options) {
+/*
     var iconUrl = this._modelIcons[options.model] || 'fg_generic_craft'
-    options.icon = options.icon || L.icon({
-      iconUrl: 'acicons/' + iconUrl + '.png',
-      iconSize: [40, 40],
-      iconAnchor: [20, 20],
-      popupAnchor: [0, -20],
-    })
-    options.title = options.title || options.callsign + ' (' + options.model + ')'
-    options.alt = options.alt || 'callsign: ' + options.callsign + ', model: ' + options.model
-    L.Marker.prototype.initialize.call(this,L.latLng(0,0))
-    L.Util.setOptions(this, options)
-    this.heading = 0
-  },
-
-  _setPos : function(pos) {
-    L.Marker.prototype._setPos.call(this, pos);
-    if (L.DomUtil.TRANSFORM) {
-      this._icon.style[L.DomUtil.TRANSFORM] += ' rotate(' + this.heading + 'deg)';
-      this._icon.style["transform-origin"] = "50% 50%";
-    }
-  },
-
-  setProperties: function(properties,callsign,model) {
-    this.heading = properties.heading;
-    this.setLatLng(properties.latLng)
-  },
-
-  setClass: function(flag,c) {
-    if( !this._icon ) return
-    if( flag && !L.DomUtil.hasClass(this._icon,c) ) L.DomUtil.addClass(this._icon,c)
-    if( !flag && L.DomUtil.hasClass(this._icon,c) ) L.DomUtil.removeClass(this._icon,c)
-  },
 
   _modelIcons: {
     "bo105": "heli",
@@ -125,162 +91,91 @@ L.AircraftMarker = L.Marker.extend({
     "OpenRadar": "atc",
     "ATC-pie": "atc",
   }
-})
+*/
 
-L.aircraftMarker = function(options) { return new L.AircraftMarker(options) }
 
-L.AircraftCircleMarker = L.CircleMarker.extend({
-  initialize: function(options) {
-    options.title = options.title || options.callsign + ' (' + options.model + ')'
-    options.alt = options.alt || 'callsign: ' + options.callsign + ', model: ' + options.model
-    L.CircleMarker.prototype.initialize.call(this,L.latLng(0,0))
-    L.Util.setOptions(this, options)
+L.AircraftIcon = L.DivIcon.extend({
+  options: {
+    className: 'fg-aircraft-marker',
+    iconSize: [43, 43],
+    iconAnchor: [21,21],
+
   },
-
-  setProperties: function(properties,callsign,model) {
-    this.setLatLng(properties.latLng)
-  },
-
-  setClass: function(flag,c) {
-    if( !this._path ) return
-    if( flag && !L.DomUtil.hasClass(this._path,c) ) L.DomUtil.addClass(this._path,c)
-    if( !flag && L.DomUtil.hasClass(this._path,c) ) L.DomUtil.removeClass(this._path,c)
-  },
-})
-
-L.aircraftCircleMarker = function(options) { return new L.AircraftCircleMarker(options) }
-
-L.AircraftLabel = L.Marker.extend({
 
   initialize: function(options) {
-    options.icon = L.divIcon({
-      className: 'fg-aircraft-label',
-      html: '',
-      iconSize: null,
-      iconAnchor: [ -10, -10 ],
+    L.DivIcon.prototype.initialize.call(this,options);
+    L.Util.setOptions(this, {
+      html: L.Util.template(
+          '<img src="acicons/heavy.png" style="transform-origin:50% 50%;transform: rotate({heading}deg);">' +
+          '<div class="fg-aircraft-label">' +
+          '<div><span>{callsign}</span>&nbsp;<span>{model}</span></div>' +
+          '<div><span>F{level}</span>&nbsp;<span>{kts}KT</span></div>' +
+          '<div style="clear: both"></div></div>', {
+          callsign: options.callsign,
+          model: options.model,
+          level: Math.round(options.position.alt/100),
+          kts: Math.round(options.speed*3600/1852),
+          heading: options.heading.toFixed(0),
+      })
     })
-    L.Marker.prototype.initialize.call(this,L.latLng(0,0));
-    L.Util.setOptions(this, options);
+
   },
+});
 
-  setProperties: function(properties,callsign,model) {
-    this.setLatLng(properties.latLng)
-    this._icon.innerHTML = this._makeHtml(properties,callsign,model)
-  },
-
-  _mps2kts: 3600/1852,
-
-  _makeHtml: function(properties,callsign,model) {
-    return L.Util.template(
-         '<div><span>' + callsign.toUpperCase() + '</span>&nbsp;<span>' + model.toUpperCase() + '</span></div>' +
-         '<div><span>F' + Math.round(properties.altitude/100) + '</span>&nbsp;<span>' + Math.round(properties.speed*this._mps2kts) + 'KT</span></div>' +
-         '<div style="clear: both"></div>', properties )
-  },
-})
-
-L.aircraftLabel = function(options) { return new L.AircraftLabel(options) }
+L.aircraftIcon = function(options) { return new L.AircraftIcon(options) }
 
 /* Complete aircraft "icon", including label and trail */
-L.Aircraft = L.LayerGroup.extend({
+L.Aircraft = L.Marker.extend({
   options: {
     historyLength: 100,
+    riseOnHover: true,
   },
 
-  initialize: function(options) {
-    L.LayerGroup.prototype.initialize.call(this);
-    L.Util.setOptions(this, options)
-    this._history = []
-    this._aircraftMarker = L.aircraftMarker(options)
-    this._circleMarker = new L.aircraftCircleMarker(L.Util.extend({ radius: 20, fill: true, color: 'red', weight: 1 }, options))
-    this._circleMarker.setRadius(4)
-    this._marker = this._circleMarker;
-    this._trail = L.polyline([],{color: '#008000', weight: 1, dashArray: '5,5,1,5'})
-    this._label = L.aircraftLabel(options)
-    this.addLayer( this._marker )
-    this.addLayer( this._trail )
-    this.addLayer( this._label )
-    this.firstSeen = this.lastSeen = Date.now()
-    this.expTimeout = 0
+  initialize: function(history) {
+    this.history = history;
+    var options = history[history.length-1]
+    options.title = options.title || options.callsign + ' (' + options.model + ')';
+    options.alt = options.alt || 'callsign: ' + options.callsign + ', model: ' + options.model;
+    options.icon = L.aircraftIcon(options)
+
+    L.Marker.prototype.initialize.call(this,L.latLng( options.position, options ));
+    this.setIcon( L.aircraftIcon( options ))
   },
 
-  onAdd: function(map) {
-    L.LayerGroup.prototype.onAdd.call(this,map);
-    map.on('zoomend', this._onMapZoomEnd, this )
-    this._setMarkerIcons( map.getZoom() )
-    this._checkExpired()
+  onAdd: function(layer) {
+    L.Marker.prototype.onAdd.call(this,layer);
+    var ll = [];
+    this.history.forEach( function(h) {
+      ll.push( h.position )
+    });
+    this._trail = new L.Polyline.AntPath(ll,{
+      color: '#008000',
+      weight: 2,
+      dashArray: '10,10',
+      delay:800,
+      pulseColor: '#008080',
+      paused: false });
+    this._trail.addTo(this._map);
   },
 
-  onRemove: function(map) {
-    if( this.expTimeout ) clearTimeout( this.expTimeout )
-    L.LayerGroup.prototype.onRemove.call(this,map);
-    map.off('zoomend', this._onMapZoomEnd, this )
+  onRemove: function(layer) {
+    this._trail.removeFrom(this._map);
+    L.Marker.prototype.onRemove.call(this,layer);
   },
 
-  _checkExpired: function() {
-    var age = Date.now() - this.lastSeen
-    this._setExpired( age > 10000, "fg-expired-ac" )
-    var self = this
-    this.expTimeout = setTimeout( function() { self._checkExpired() }, 1000 )
-  },
-
-  _setExpired: function(bool,c) {
-    this._aircraftMarker.setClass(bool,c)
-    this._circleMarker.setClass(bool,c)
-  },
-
-  _onMapZoomEnd: function(evt) {
-    this._setMarkerIcons( evt.target.getZoom() )
-  },
-
-  _setMarkerIcons: function(zoom) {
-    if( this._marker == this._circleMarker && zoom >= 5 ) {
-      this.removeLayer( this._marker )
-      this._marker = this._aircraftMarker;
-      this.addLayer( this._marker )
-    }
-    if( this._marker == this._aircraftMarker && zoom < 5 ) {
-      this.removeLayer( this._marker )
-      this._marker = this._circleMarker;
-      this.addLayer( this._marker )
-    }
-  },
-
-  setPosAltHeading: function( latLng, altitude, heading ) {
-
-    var now = Date.now()
-    this.lastSeen = now
-
-    var speed = 0
-    if( this._history.length > 0 ) {
-      var last = this._history[this._history.length-1]
-      var dist = last.latLng.distanceTo(latLng)
-      if( dist < 1 ) return; // slow moving target, track at least 1m steps
-      var dt = now - last.time
-      if( dt > 0 ) speed = dist / dt * 1000
-    }
-
-    var properties = {
-      latLng: latLng,
-      heading: heading,
-      altitude: altitude,
-      speed: speed,
-      time: now,
-    }
-    this._circleMarker.setProperties( properties, this.options.callsign, this.options.model )
-    this._aircraftMarker.setProperties( properties, this.options.callsign, this.options.model )
-    this._label.setProperties( properties, this.options.callsign, this.options.model )
-
-
-    this._history.push(properties)
-    while( this._history.length > this.options.historyLength )
-      this._history.shift()
-
-    var trail =  []
-    this._history.forEach(function(h) {
-      trail.push(h.latLng)
-    })
-    this._trail.setLatLngs(trail)
-  },
+//
+//  _checkExpired: function() {
+//    var age = Date.now() - this.lastSeen
+//    this._setExpired( age > 10000, "fg-expired-ac" )
+//    var self = this
+//    this.expTimeout = setTimeout( function() { self._checkExpired() }, 1000 )
+//  },
+//
+//  _setExpired: function(bool,c) {
+//    this._aircraftMarker.setClass(bool,c)
+//    this._circleMarker.setClass(bool,c)
+//  },
+//
 
 });
 

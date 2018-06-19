@@ -8,9 +8,8 @@ html, body, #wrapper {
 
 .fg-aircraft-label {
   color: #00ff00;
-  text-shadow: 1px 1px #404040;
   float: left;
-  background: #ccc;
+  background: #242;
   opacity: .7;
   padding: 1px 5px 1px 5px;
   border: 1px solid gray;

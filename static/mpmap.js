@@ -129,7 +129,7 @@ $(function() {
 
   var pilotList = L.pilotList({ position: 'topleft' }).addTo(map)
 
-  var aircraftLayer = L.mpAircraftLayer().addTo(map)
+  var aircraftLayer = L.mpAircraftLayer().addTo(map);
 
   map.on('pilot-selection-change', function(evt) {
     var pilot = pilotList.getPilotByCallsign( evt.data )
