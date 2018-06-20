@@ -1,112 +1,113 @@
-/*
-    var iconUrl = this._modelIcons[options.model] || 'fg_generic_craft'
 
-  _modelIcons: {
-    "bo105": "heli",
-    "sikorsky76c": "heli",
-    "ec135": "heli",
-    "r22": "heli",
-    "s76c": "heli",
-    "Lynx-WG13": "heli",
-    "S51-sikorsky": "heli",
-    "CH47": "heli",
-    "R22": "heli",
-    "apache-model": "heli",
-    "uh-1": "heli",
-    "uh60": "heli",
-    "OH-1": "heli",
-    "ec130b4": "heli",
-    "ec130t2": "heli",
+const ModelIcons = {
+  "bo105": "heli",
+  "sikorsky76c": "heli",
+  "ec135": "heli",
+  "r22": "heli",
+  "s76c": "heli",
+  "Lynx-WG13": "heli",
+  "S51-sikorsky": "heli",
+  "CH47": "heli",
+  "R22": "heli",
+  "apache-model": "heli",
+  "uh-1": "heli",
+  "uh60": "heli",
+  "OH-1": "heli",
+  "ec130": "heli",
 
-    "c150": "singleprop",
-    "c172p": "singleprop",
-    "c172-dpm": "singleprop",
-    "c182-dpm": "singleprop",
-    "dhc2floats": "singleprop",
-    "pa28-161": "singleprop",
-    "pc7": "singleprop",
-    "j3cub": "singleprop",
+  "c150": "singleprop",
+  "c172": "singleprop",
+  "c182": "singleprop",
+  "dhc2": "singleprop",
+  "pa28": "singleprop",
+  "pc7": "singleprop",
+  "j3cub": "singleprop",
 
-    "c310-dpm": "twinprop",
-    "c310u3a": "twinprop",
-    "Boeing314Clipper": "twinprop",
-    "Lockheed1049_twa": "twinprop",
-    "TU-114-model": "twinprop",
-    "b1900d-anim": "twinprop",
-    "b29-model": "twinprop",
-    "beech99-model": "twinprop",
-    "dc3-dpm": "twinprop",
-    "fokker50": "twinprop",
-    "SenecaII": "twinprop",
+  "c310": "twinprop",
+  "c310": "twinprop",
+  "Boeing314": "twinprop",
+  "Lockheed1049": "twinprop",
+  "TU-114": "twinprop",
+  "b1900d": "twinprop",
+  "b29": "twinprop",
+  "beech99": "twinprop",
+  "dc3": "twinprop",
+  "fokker50": "twinprop",
+  "SenecaII": "twinprop",
 
-    "Citation-II": "smalljet",
-    "Bravo": "smalljet",
-    "fokker100": "smalljet",
-    "tu154B": "smalljet",
+  "Citation": "smalljet",
+  "Bravo": "smalljet",
+  "fokker100": "smalljet",
+  "tu154B": "smalljet",
 
-    "boeing733": "heavyjet",
-    "boeing747-400-jw": "heavyjet",
-    "a320-fb": "heavyjet",
-    "A380": "heavyjet",
-    "AN-225-model": "heavyjet",
-    "B-52F-model": "heavyjet",
-    "Concorde-ba": "heavyjet",
-    "FINNAIRmd11": "heavyjet",
-    "MD11": "heavyjet",
-    "KLMmd11": "heavyjet",
-    "737-300": "heavyjet",
-    "787": "heavyjet",
-    "777-200": "heavyjet",
-    "747-400": "heavyjet",
-    "737-100": "heavyjet",
-    "737-400": "heavyjet",
+  "boeing733": "heavyjet",
+  "boeing747": "heavyjet",
+  "a320": "heavyjet",
+  "A380": "heavyjet",
+  "AN-225": "heavyjet",
+  "B-52F": "heavyjet",
+  "Concorde": "heavyjet",
+  "FINNAIRmd11": "heavyjet",
+  "MD11": "heavyjet",
+  "KLMmd11": "heavyjet",
+  "737": "heavyjet",
+  "787": "heavyjet",
+  "777": "heavyjet",
+  "747": "heavyjet",
 
-    "hgldr-cs-model": "glider",
-    "paraglider_model": "glider",
-    "colditz-model": "glider",
-    "sgs233": "glider",
+  "hgldr-cs": "glider",
+  "paraglider": "glider",
+  "colditz": "glider",
+  "sgs233": "glider",
 
-    "ZLT-NT": "blimp",
-    "ZF-balloon": "blimp",
-    "Submarine_Scout": "blimp",
-    "LZ-129": "blimp",
-    "Excelsior-model": "blimp",
+  "ZLT-NT": "blimp",
+  "ZF-balloon": "blimp",
+  "Submarine_Scout": "blimp",
+  "LZ-129": "blimp",
+  "Excelsior": "blimp",
 
-    "mp-nimitz": "fg_carrier",
-    "mp-eisenhower": "fg_carrier",
-    "mp-foch": "fg_carrier",
+  "mp-nimitz": "fg_carrier",
+  "mp-eisenhower": "fg_carrier",
+  "mp-foch": "fg_carrier",
 
-    "OV10": "ov10",
-    "OV10_USAFE": "ov10",
+  "OV10": "ov10",
 
-    "KC135": "kc135",
-    "ch53e-model": "ch53e",
-    "E3B": "e3b",
-    "ufo": "ufo",
+  "KC135": "kc135",
+  "ch53e-model": "ch53e",
+  "E3B": "e3b",
+  "ufo": "ufo",
 
-    "atc-tower": "atc",
-    "atc-tower2": "atc",
-    "mibs": "atc",
-    "atc": "atc",
-    "OpenRadar": "atc",
-    "ATC-pie": "atc",
+  "atc-tower": "atc",
+  "atc-tower2": "atc",
+  "mibs": "atc",
+  "atc": "atc",
+  "OpenRadar": "atc",
+  "ATC-pie": "atc",
+}
+
+function getModelIcon( model ) {
+  var mlc = model.toLowerCase();
+  for( var m in ModelIcons ) {
+    if( mlc.startsWith(m.toLowerCase()) )
+      return ModelIcons[m];
   }
-*/
-
+  return 'fg_generic_craft';
+}
 
 L.AircraftIcon = L.DivIcon.extend({
   options: {
     className: 'fg-aircraft-marker',
-    iconSize: [43, 43],
-    iconAnchor: [21,21],
+    iconSize: [40, 40],
+    iconAnchor: [20,20],
 
   },
 
   initialize: function(options,vanished) {
     L.DivIcon.prototype.initialize.call(this,options);
+    console.log(options.model,ModelIcons[options.model] )
     L.Util.setOptions(this, {
       html: L.Util.template(
-          '<img src="acicons/heavy.png" style="transform-origin:50% 50%;transform: rotate({heading}deg);" {extra}>' +
+          '<img src="acicons/{icon}.png" style="transform-origin:50% 50%;transform: rotate({heading}deg);" {extra}>' +
           '<div class="fg-aircraft-label {cls}">' +
           '<div><span>{callsign}</span>&nbsp;<span>{model}</span></div>' +
           '<div><span>F{level}</span>&nbsp;<span>{kts}KT</span></div>' +
@@ -118,6 +119,7 @@ L.AircraftIcon = L.DivIcon.extend({
           heading: options.heading.toFixed(0),
           cls: vanished ? 'fg-expired-ac': '',
           extra: vanished ? 'class="fg-expired-ac"' : '',
+          icon: getModelIcon(options.model),
       })
     })
 
