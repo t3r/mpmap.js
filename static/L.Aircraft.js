@@ -102,12 +102,12 @@ L.AircraftIcon = L.DivIcon.extend({
 
   },
 
-  initialize: function(options) {
+  initialize: function(options,vanished) {
     L.DivIcon.prototype.initialize.call(this,options);
     L.Util.setOptions(this, {
       html: L.Util.template(
-          '<img src="acicons/heavy.png" style="transform-origin:50% 50%;transform: rotate({heading}deg);">' +
-          '<div class="fg-aircraft-label">' +
+          '<img src="acicons/heavy.png" style="transform-origin:50% 50%;transform: rotate({heading}deg);" {extra}>' +
+          '<div class="fg-aircraft-label {cls}">' +
           '<div><span>{callsign}</span>&nbsp;<span>{model}</span></div>' +
           '<div><span>F{level}</span>&nbsp;<span>{kts}KT</span></div>' +
           '<div style="clear: both"></div></div>', {
@@ -116,13 +116,15 @@ L.AircraftIcon = L.DivIcon.extend({
           level: Math.round(options.position.alt/100),
           kts: Math.round(options.speed*3600/1852),
           heading: options.heading.toFixed(0),
+          cls: vanished ? 'fg-expired-ac': '',
+          extra: vanished ? 'class="fg-expired-ac"' : '',
       })
     })
 
   },
 });
 
-L.aircraftIcon = function(options) { return new L.AircraftIcon(options) }
+L.aircraftIcon = function(options,vanished) { return new L.AircraftIcon(options,vanished) }
 
 /* Complete aircraft "icon", including label and trail */
 L.Aircraft = L.Marker.extend({
@@ -131,7 +133,7 @@ L.Aircraft = L.Marker.extend({
     riseOnHover: true,
   },
 
-  initialize: function(history) {
+  initialize: function(history,vanished) {
     this.history = history;
     var options = history[history.length-1]
     options.title = options.title || options.callsign + ' (' + options.model + ')';
@@ -139,7 +141,7 @@ L.Aircraft = L.Marker.extend({
     options.icon = L.aircraftIcon(options)
 
     L.Marker.prototype.initialize.call(this,L.latLng( options.position, options ));
-    this.setIcon( L.aircraftIcon( options ))
+    this.setIcon( L.aircraftIcon( options, vanished ))
   },
 
   onAdd: function(layer) {
@@ -163,21 +165,7 @@ L.Aircraft = L.Marker.extend({
     L.Marker.prototype.onRemove.call(this,layer);
   },
 
-//
-//  _checkExpired: function() {
-//    var age = Date.now() - this.lastSeen
-//    this._setExpired( age > 10000, "fg-expired-ac" )
-//    var self = this
-//    this.expTimeout = setTimeout( function() { self._checkExpired() }, 1000 )
-//  },
-//
-//  _setExpired: function(bool,c) {
-//    this._aircraftMarker.setClass(bool,c)
-//    this._circleMarker.setClass(bool,c)
-//  },
-//
-
 });
 
-L.aircraft = function(options) { return new L.Aircraft(options) }
+L.aircraft = function(options,vanished) { return new L.Aircraft(options,vanished) }
 

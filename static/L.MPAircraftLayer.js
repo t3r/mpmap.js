@@ -8,7 +8,7 @@ L.MPAircraftLayer = L.MarkerClusterGroup.extend({
     this._aircraft = {}
     this._map = map
     this.on('mpdata', this._onData );
-//    this._gc()
+    this._gc()
   },
 
   onRemove: function() {
@@ -23,18 +23,21 @@ L.MPAircraftLayer = L.MarkerClusterGroup.extend({
     var expired = []
     for( var callsign in this._aircraft ) {
       var ac = this._aircraft[callsign]
-      ac = ac[ac.length-1]
-      if( now - ac.time > 30000 )
+      var lastSeen = ac.history[ac.history.length-1].time
+      if( now - lastSeen > 30000 )
         expired.push(callsign)
-      ac.vanished = ( now - ac.time > 15000 );
-      if(ac.vanished){
-        // find marker, set class
-      }
+      ac.vanished = ( now - lastSeen > 15000 );
     }
     expired.forEach(function(callsign) {
       console.log("Goodbye",callsign)
       delete (this._aircraft[callsign])
     },this)
+
+    this.clearLayers();
+    for( var callsign in this._aircraft ) {
+      var ac = this._aircraft[callsign];
+      this.addLayer( L.aircraft(ac.history, ac.vanished ))
+    }
     this.gcTimeout = setTimeout( function(self) { self._gc() }, 1000, this )
   },
 
@@ -45,6 +48,8 @@ L.MPAircraftLayer = L.MarkerClusterGroup.extend({
     var now = Date.now()
 
     evt.data.clients.forEach(function(client) {
+      if( !client.geod ) client.geod = {}
+      if( !client.oriA ) client.oriA = {}
       var ac = this._aircraft[client.callsign];
       if( !ac ) {
         ac = this._aircraft[client.callsign] = {
@@ -55,13 +60,13 @@ L.MPAircraftLayer = L.MarkerClusterGroup.extend({
       }
       ac.history.push({
           position: {
-            lat: client.geod.lat,
-            lon: client.geod.lng,
-            alt: client.geod.alt,
+            lat: client.geod.lat||0,
+            lon: client.geod.lng||0,
+            alt: client.geod.alt||0,
           },
-          heading: client.oriA.z,
-          callsign: client.callsign,
-          model: client.model,
+          heading: client.oriA.z||0,
+          callsign: client.callsign||'UNKNOWN',
+          model: client.model||'UNKNOWN',
           time: now,
           speed: 0,
       });
@@ -75,12 +80,6 @@ L.MPAircraftLayer = L.MarkerClusterGroup.extend({
         ac.history.shift()
 
     },this);
-
-    this.clearLayers();
-    for( var callsign in this._aircraft ) {
-      var ac = this._aircraft[callsign];
-      this.addLayer( L.aircraft(ac.history) )
-    }
   },
 
 })
