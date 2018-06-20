@@ -104,7 +104,6 @@ L.AircraftIcon = L.DivIcon.extend({
 
   initialize: function(options,vanished) {
     L.DivIcon.prototype.initialize.call(this,options);
-    console.log(options.model,ModelIcons[options.model] )
     L.Util.setOptions(this, {
       html: L.Util.template(
           '<img src="acicons/{icon}.png" style="transform-origin:50% 50%;transform: rotate({heading}deg);" {extra}>' +
