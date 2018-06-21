@@ -2,6 +2,22 @@
 
 L.MPAircraftLayer = L.MarkerClusterGroup.extend({
 
+  options: {
+    iconCreateFunction: function (cluster) {
+      var childCount = cluster.getChildCount();
+      var c = ' marker-cluster-';
+      if (childCount < 5) {
+        c += 'small';
+      } else if (childCount < 10) {
+        c += 'medium';
+      } else {
+        c += 'large';
+      }
+
+      return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
+    },
+  },
+
   onAdd: function(map) {
     L.MarkerClusterGroup.prototype.onAdd.call(this,map);
 
