@@ -3,6 +3,8 @@
 L.MPAircraftLayer = L.MarkerClusterGroup.extend({
 
   options: {
+    disableClusteringAtZoom: 12,
+    spiderfyOnMaxZoom: false,
     iconCreateFunction: function (cluster) {
       var childCount = cluster.getChildCount();
       var c = ' marker-cluster-';

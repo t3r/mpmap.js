@@ -151,13 +151,15 @@ L.Aircraft = L.Marker.extend({
     this.history.forEach( function(h) {
       ll.push( h.position )
     });
-    this._trail = new L.Polyline.AntPath(ll,{
+    this._trail = new L.Polyline/*.AntPath*/(ll,{
       color: '#008000',
       weight: 2,
       dashArray: '10,10',
-      delay:800,
+      delay:1200,
       pulseColor: '#008080',
-      paused: false });
+      paused: false,
+      hardwareAccelerated: true,
+    });
     this._trail.addTo(this._map);
   },
 
