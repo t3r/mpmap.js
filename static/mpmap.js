@@ -1,5 +1,39 @@
 $(function() {
 
+  function Settings() {
+
+    var props = Cookies.getJSON('mpmap-settings' ) || {};
+
+    this.lat = Number(getUrlParameter('lat',props.lat ||53.5));
+    this.lng = Number(getUrlParameter('lng',props.lng ||10));
+    this.zoom = Number(getUrlParameter('zoom',props.zoom||3));
+    this.server = getUrlParameter('zoom',props.server||'mpserver01.flightgear.org');
+    this.refresh = Number(getUrlParameter('refresh',props.refresh||10));
+    this.baseLayer = props.baseLayer || 'OpenStreetMap';
+    this.overlays = props.overlays || {};
+
+    function getUrlParameter(sParam,dflt) {
+      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+          sURLVariables = sPageURL.split('&'),
+          sParameterName,
+          i;
+
+      for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] === sParam) {
+          return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+      }
+      return dflt;
+    };
+  }
+
+  Settings.prototype.save = function() {
+    Cookies.set('mpmap-settings', this )
+  }
+
+  var settings = new Settings()
+
   L.Control.Donate = L.Control.extend({
     onAdd: function(map) {
         var root = L.DomUtil.create('div');
@@ -16,27 +50,6 @@ $(function() {
     return new L.Control.Donate(opts);
   }
 
-  var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
-        }
-    }
-  };
-
-  var lat = Number(getUrlParameter('lat')) || 53.5,
-      lng = Number(getUrlParameter('lng')) || 10,
-      zoom = Number(getUrlParameter('zoom')) || 3,
-      server = getUrlParameter('server') || 'mpserver01.flightgear.org',
-      refresh = Number(getUrlParameter('refresh')) || 10;
-
   map = new L.Map('map', {
     fadeAnimation: true,
     zoomAnimation: true,
@@ -44,7 +57,33 @@ $(function() {
   });
 
   map.on('server-selection-change', function(evt) {
-    server = evt.server.dn
+    settings.server = evt.server.dn
+    settings.save();
+  })
+
+  map.on('moveend', function(evt) {
+    var c = map.getCenter();
+    settings.lat = c.lat;
+    settings.lng = c.lng;
+    settings.save();
+  })
+
+  map.on('zoomend', function(evt) {
+    settings.zoom = map.getZoom();
+    settings.save();
+  })
+
+  map.on('baselayerchange', function(evt) {
+    settings.baseLayer = evt.name;
+    settings.save();
+  })
+  map.on('overlayadd', function(evt) {
+    settings.overlays[evt.name] = true;
+    settings.save();
+  })
+  map.on('overlayremove', function(evt) {
+    delete settings.overlays[evt.name];
+    settings.save();
   })
 
   var baselayer = {
@@ -119,13 +158,18 @@ $(function() {
   }
 
   map
-    .setView(new L.LatLng(lat,lng),zoom)
-    .addLayer(baselayer["OpenStreetMap"]);
+    .setView(new L.LatLng(settings.lat,settings.lng),settings.zoom)
+    .addLayer(baselayer[settings.baseLayer]);
 
   L.control.zoom({
     position: 'topright',
   }).addTo(map);
   L.control.layers(baselayer, overlays).addTo(map);
+
+  for( var l in settings.overlays ) {
+    if( overlays.hasOwnProperty(l) )
+      overlays[l].addTo(map);
+  }
 
   var pilotList = L.pilotList({ position: 'topleft' }).addTo(map)
 
@@ -136,33 +180,33 @@ $(function() {
     map.panTo( L.latLng( pilot.geod.lat, pilot.geod.lng, { animate: true } ) )
   });
 
-  var serverList = L.serverList({ position: 'bottomleft', selected: server }).addTo(map)
+  var serverList = L.serverList({ position: 'bottomleft', selected: settings.server }).addTo(map)
   L.control.donate({ position: 'bottomleft' }).addTo(map);
 
 
   var retryCnt = 3
   function loadData() {
-    $.ajax( "api/stat/" + server, {
+    $.ajax( "api/stat/" + settings.server, {
       success: function(data) {
         data.clients.sort(function(a,b) {
           return a.callsign.localeCompare(b.callsign)
         })
         aircraftLayer.fire('mpdata',{ data: data },aircraftLayer)
         pilotList.setPilots( data.clients )
-        if( refresh > 0 ) {
+        if( settings.refresh > 0 ) {
           setTimeout( function() {
             loadData()
-          },refresh*1000)
+          },settings.refresh*1000)
         }
       },
       error: function(a,b,c) {
         console.log("AJAX error, retry=", retryCnt,a,b,c)
         if( retryCnt > 0 ) {
           retryCnt--;
-          if( refresh > 0 ) {
+          if( settings.refresh > 0 ) {
             setTimeout( function() {
               loadData()
-            },refresh*1000)
+            },settings.refresh*1000)
           }
         } else {
           alert("Can't load multiplayer data, please reload page")

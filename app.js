@@ -56,6 +56,7 @@ app.use('/lb', express.static(path.join(__dirname, 'node_modules/leaflet-bing-la
 app.use('/lmc', express.static(path.join(__dirname, 'node_modules/leaflet.markercluster/dist')));
 app.use('/lap', express.static(path.join(__dirname, 'node_modules/leaflet-ant-path/dist')));
 app.use('/j', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
+app.use('/jc', express.static(path.join(__dirname, 'node_modules/js-cookie/src')));
 app.use(express.static(path.join(__dirname, 'static')));
 
 app.use('/api', require('./routes/api'));
