@@ -1,6 +1,6 @@
 {
   "name": "mpmap.js",
-  "version": "1.13",
+  "version": "1.13.0",
   "description": "FlightGear Multiplayer Map - the Node.js way",
   "homepage": "https://mpmap03.flightgear.org/",
   "main": "server.js",
