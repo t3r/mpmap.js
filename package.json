@@ -31,6 +31,7 @@
     "morgan": "^1.8.2",
     "node-cache": "^4.2.0",
     "pug": "^2.0.3",
+    "request": "^2.88.0",
     "serve-favicon": "^2.5.0"
   },
   "scripts": {
