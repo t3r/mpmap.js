@@ -77,12 +77,9 @@ const ModelIcons = {
   "E3B": "e3b",
   "ufo": "ufo",
 
-  "atc-tower": "atc",
-  "atc-tower2": "atc",
-  "mibs": "atc",
-  "atc": "atc",
-  "OpenRadar": "atc",
-  "ATC-pie": "atc",
+  "mibs": "atc2",
+  "atc": "atc2",
+  "OpenRadar": "atc2",
 }
 
 function getModelIcon( model ) {
@@ -103,6 +100,8 @@ L.AircraftIcon = L.DivIcon.extend({
   },
 
   initialize: function(options,vanished) {
+    var modelIcon = getModelIcon(options.model);
+    var rotating = modelIcon === "atc2";
     L.DivIcon.prototype.initialize.call(this,options);
     L.Util.setOptions(this, {
       html: L.Util.template(
@@ -117,8 +116,8 @@ L.AircraftIcon = L.DivIcon.extend({
           kts: Math.round(options.speed*3600/1852),
           heading: options.heading.toFixed(0),
           cls: vanished ? 'fg-expired-ac': '',
-          extra: vanished ? 'class="fg-expired-ac"' : '',
-          icon: getModelIcon(options.model),
+          extra: vanished ? 'class="fg-expired-ac"' : rotating ? 'class="rotating"' : '',
+          icon: modelIcon,
       })
     })
 

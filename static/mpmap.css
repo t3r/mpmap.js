@@ -6,6 +6,67 @@ html, body, #wrapper {
   margin: 0;
 }
 
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+#left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 150px;
+  background: red;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+    perspective: 1500px; 
+}
+
+#accordion .form-group {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+
+#sidebar {
+    min-width: 200px;
+    max-width: 200px;
+    min-height: 100vh;
+    max-height: 100vh;
+    height: 100vh;
+    transition: all 500ms cubic-bezier(0.250, 0.250, 0.750, 0.750);
+    transform-origin: center left; /* Set the transformed position of sidebar to center left side. */
+}
+
+#sidebar.active {
+    margin-left: -200px;
+    transform: rotateY(100deg); /* Rotate sidebar vertically by 100 degrees. */
+}
+
+#content {
+    min-height: 100vh;
+    width: 100%;
+}
+
+#sidebarCollapse {
+  position: absolute;
+  top:0;
+  z-index:99999;
+}
+
+#sidebarCollapse::after {
+  content: "<";
+}
+
+#sidebarCollapse.active::after {
+  content: ">";
+}
+
 .fg-aircraft-label {
   color: #00ff00;
   float: left;
@@ -55,4 +116,61 @@ html, body, #wrapper {
 
 @keyframes blinker {  
   50% { opacity: 0; }
+}
+
+#pilotsList li {
+  font-size: 10px;
+}
+
+#pilotsList li span:first-of-type{
+  font-weight: bold;
+}
+
+#pilotsList li span:last-of-type::before {
+  content: " (";
+}
+
+#pilotsList li span:last-of-type::after {
+  content: ")";
+}
+
+#pilotsList li:hover {
+  background: #ccc;
+}
+
+@keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.rotating {
+  -webkit-animation: rotating 1s linear infinite;
+  -moz-animation: rotating 1s linear infinite;
+  -ms-animation: rotating 1s linear infinite;
+  -o-animation: rotating 1s linear infinite;
+  animation: rotating 1s linear infinite;
+}
+
+#accordion .card-link {
+  color: #888;
+}
+
+#accordion .card-link:hover {
+  color: #000;
+}
+
+#accordion .card-header, #accordion .list-group-item {
+  padding: 0 1.25rem;
 }

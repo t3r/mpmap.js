@@ -34,32 +34,12 @@ $(function() {
 
   var settings = new Settings()
 
-  L.Control.Donate = L.Control.extend({
-    onAdd: function(map) {
-        var root = L.DomUtil.create('div');
-        root.innerHTML = '<a href="https://liberapay.com/t3r/"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>';
-        return root;
-    },
-
-    onRemove: function(map) {
-        // Nothing to do here
-    }
-  });
-
-  L.control.donate = function(opts) {
-    return new L.Control.Donate(opts);
-  }
-
   map = new L.Map('map', {
     fadeAnimation: true,
     zoomAnimation: true,
     zoomControl: false,
   });
 
-  map.on('server-selection-change', function(evt) {
-    settings.server = evt.server.dn
-    settings.save();
-  })
 
   map.on('moveend', function(evt) {
     var c = map.getCenter();
@@ -171,18 +151,54 @@ $(function() {
       overlays[l].addTo(map);
   }
 
-  var pilotList = L.pilotList({ position: 'topleft' }).addTo(map)
 
   var aircraftLayer = L.mpAircraftLayer().addTo(map);
 
-  map.on('pilot-selection-change', function(evt) {
-    var pilot = pilotList.getPilotByCallsign( evt.data )
-    map.panTo( L.latLng( pilot.geod.lat, pilot.geod.lng, { animate: true } ) )
+  $("#mpserverSelect").on('change', function (e) {
+    settings.server = this.value;
+    settings.save();
   });
 
-  var serverList = L.serverList({ position: 'bottomleft', selected: settings.server }).addTo(map)
-  L.control.donate({ position: 'bottomleft' }).addTo(map);
+//  var pilotList = L.pilotList({ position: 'topleft' }).addTo(map)
+//  var serverList = L.serverList({ position: 'bottomleft', selected: settings.server }).addTo(map)
 
+  function setPilotsList(data) {
+      if( !(data && Array.isArray(data)) ) return;
+      var $list = $('#pilotsList');
+
+      $list.children("li").each( function() {
+        var d = $(this).data("pilot");
+        var $li = $(this);
+        if( ! data.some( function(p) { return p.callsign === d.callsign; } ) ) {
+          $li.remove();
+        }
+      });
+
+      data.forEach( function(pilot) {
+/*
+        if( filter && filter.length &&
+            pilot.callsign.toLowerCase().indexOf(filter) === -1  &&
+            pilot.model.toLowerCase().indexOf(filter) === -1 )
+          return;
+*/
+
+        var $li = $('<li class="list-group-item"><span>' + pilot.callsign + '</span><span>' + pilot.model + '</span>' + '</li>')
+            .data("pilot", pilot )
+            .on('click', function (foo) {
+              map.flyTo( L.latLng( pilot.geod.lat, pilot.geod.lng), 12, { animate: true } );
+            })
+
+        var $found = $list.children("li").filter( function(idx,ele) {
+            return $(ele).data("pilot").callsign === pilot.callsign;
+        })
+
+        if( $found.length ) {
+          $found.replaceWith( $li );
+        } else {
+          $list.append( $li );
+        }
+      }); 
+  }   
 
   var retryCnt = 3
   function loadData() {
@@ -192,7 +208,7 @@ $(function() {
           return a.callsign.localeCompare(b.callsign)
         })
         aircraftLayer.fire('mpdata',{ data: data },aircraftLayer)
-        pilotList.setPilots( data.clients )
+        setPilotsList( data.clients )
         if( settings.refresh > 0 ) {
           setTimeout( function() {
             loadData()
@@ -217,4 +233,28 @@ $(function() {
   }
 
   loadData()
+
+  $.ajax( "api/stat/", {
+    context: this,
+    success: function(data) {
+      $select = $("#mpserverSelect").empty();
+      for( var name in data ) {
+        $select.append($('<option>', {
+          value: data[name].dn,
+          text: name + ' (' + data[name].location + ')',
+          selected: data[name].dn === settings.server,
+        }));
+      }
+    },  
+    error: function(a,b,c) {
+      console.log("AJAX error", a,b,c)
+    },
+    timeout: 30000,
+  })  
+
+  $('#sidebarCollapse.btn.btn').on('click', function () {
+    $('.sidebarActivation').toggleClass('active');
+    setTimeout( function() { map.invalidateSize(true); }, 600 );
+  });
+
 })

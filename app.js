@@ -57,6 +57,8 @@ app.use('/lmc', express.static(path.join(__dirname, 'node_modules/leaflet.marker
 app.use('/lap', express.static(path.join(__dirname, 'node_modules/leaflet-ant-path/dist')));
 app.use('/j', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
 app.use('/jc', express.static(path.join(__dirname, 'node_modules/js-cookie/src')));
+app.use('/b', express.static(path.join(__dirname, 'node_modules/bootstrap/dist')));
+app.use('/fa', express.static(path.join(__dirname, 'node_modules/@fortawesome/fontawesome-free')));
 app.use(express.static(path.join(__dirname, 'static')));
 
 app.use('/api', require('./routes/api'));
