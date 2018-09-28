@@ -11,7 +11,9 @@ $(function() {
     this.refresh = Number(getUrlParameter('refresh',props.refresh||10));
     this.baseLayer = props.baseLayer || 'OpenStreetMap';
     this.overlays = props.overlays || {};
+    this.saveCookie = props.saveCookie;
 
+    $('#cookieCheck:checkbox').prop('checked', this.saveCookie ? true : false );
     function getUrlParameter(sParam,dflt) {
       var sPageURL = decodeURIComponent(window.location.search.substring(1)),
           sURLVariables = sPageURL.split('&'),
@@ -29,7 +31,10 @@ $(function() {
   }
 
   Settings.prototype.save = function() {
-    Cookies.set('mpmap-settings', this )
+    if( this.saveCookie )
+      Cookies.set('mpmap-settings', this )
+    else
+      Cookies.remove('mpmap-settings');
   }
 
   var settings = new Settings()
@@ -255,6 +260,15 @@ $(function() {
   $('#sidebarCollapse.btn.btn').on('click', function () {
     $('.sidebarActivation').toggleClass('active');
     setTimeout( function() { map.invalidateSize(true); }, 600 );
+  });
+
+  $('#cookieCheck:checkbox').change(function() {
+    if( $(this).prop('checked') )  {
+      settings.saveCookie = true;
+    } else {
+      delete settings.saveCookie;
+    }
+    settings.save();
   });
 
 })
