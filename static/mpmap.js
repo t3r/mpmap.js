@@ -187,7 +187,8 @@ $(function() {
           return;
 */
 
-        var $li = $('<li class="list-group-item"><span>' + pilot.callsign + '</span><span>' + pilot.model + '</span>' + '</li>')
+        var title = Number(pilot.oriA.z).toFixed(0) + '° ' + Number(pilot.geod.alt).toFixed(0) + 'ft';
+        var $li = $('<li class="list-group-item" data-toggle="tooltip" data-placement="right" title="' + title + '"><span>' + pilot.callsign + '</span><span>' + pilot.model + '</span>' + '</li>')
             .data("pilot", pilot )
             .on('click', function (foo) {
               map.flyTo( L.latLng( pilot.geod.lat, pilot.geod.lng), 12, { animate: true } );
