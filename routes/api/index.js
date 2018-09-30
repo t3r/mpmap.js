@@ -128,4 +128,95 @@ router.route('/stat/:server/:port*?').get(function(req, res) {
   })
 })
 
+function ServerObserver() {
+  this.observers = {};
+  this.loop();
+}
+
+ServerObserver.prototype.loop = function() {
+
+  for( srv in this.observers ) {
+
+    GetCachedStatus(srv,5001)
+    .then( data => {
+      this.observers[srv].forEach( ws => {
+        try {
+          ws.send( JSON.stringify(data) )
+        }
+        catch( ex ) {
+          console.log(ex);
+          this.unsubscribe( ws );
+        }
+      }, this)
+    })
+    .catch( err => {
+      console.log("Can't get cached status for ", srv, err );
+      this.observers[srv].forEach( ws => {
+        ws.close()
+      })
+      delete this.observers[srv];
+    })
+  }
+
+  setTimeout( function(self) { self.loop() }, 10000, this );
+
+}
+
+ServerObserver.prototype.subscribe = function(server,ws) {
+  this.unsubscribe(ws);
+  (this.observers[server] = (this.observers[server] || [])).push(ws);
+  try {
+    GetCachedStatus(server,5001)
+    .then( data => {
+      try {
+        ws.send( JSON.stringify(data) )
+      }
+      catch( ex ) {
+        console.log(ex);
+        this.unsubscribe( ws );
+      }
+    })
+    .catch( err => {
+      console.log("Can't get cached status for ", server, err );
+      this.unsubscribe();
+    })
+  }
+  catch( ex ) {
+    console.log(ex);
+    this.unsubscribe( ws );
+  }
+}
+
+ServerObserver.prototype.unsubscribe = function(ws) {
+  for( var s in this.observers ) {
+    let idx = this.observers[s].indexOf(ws);
+    if( idx == -1 ) continue;
+    this.observers[s].splice(idx,1);
+    if( this.observers[s].length == 0 ) {
+      delete this.observers[s];
+    }
+  }
+}
+
+const serverObserver = new ServerObserver();
+
+router.ws('/stream', function(ws, req) {
+
+  ws.on('message', function(msg) {
+    let options = null;
+    try {
+      options = JSON.parse(msg);
+    }
+    catch (ex) {
+      return;
+    }
+    if( options.server )
+      serverObserver.subscribe( options.server, ws );
+  });
+
+  ws.on('error', function(msg) {
+    serverObserver.subscribe( ws );
+  });
+});
+
 module.exports = router

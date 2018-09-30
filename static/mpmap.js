@@ -204,17 +204,22 @@ $(function() {
           $list.append( $li );
         }
       }); 
-  }   
+  }
+
+  function haveData( data ) {
+console.log("have data")
+    data.clients.sort(function(a,b) {
+      return a.callsign.localeCompare(b.callsign)
+    })
+    aircraftLayer.fire('mpdata',{ data: data },aircraftLayer)
+    setPilotsList( data.clients )
+  }
 
   var retryCnt = 3
   function loadData() {
     $.ajax( "api/stat/" + settings.server, {
       success: function(data) {
-        data.clients.sort(function(a,b) {
-          return a.callsign.localeCompare(b.callsign)
-        })
-        aircraftLayer.fire('mpdata',{ data: data },aircraftLayer)
-        setPilotsList( data.clients )
+        haveData( data );
         if( settings.refresh > 0 ) {
           setTimeout( function() {
             loadData()
@@ -238,7 +243,24 @@ $(function() {
     })
   }
 
-  loadData()
+//  loadData()
+  var connection = new WebSocket('ws://localhost:8080/api/stream' );
+
+  connection.onmessage = function (e) {
+    haveData( JSON.parse(e.data) );
+  };
+
+  connection.onopen = function () {
+    connection.send(JSON.stringify({
+      server: settings.server,
+      binary: false,
+    }));
+  };
+  connection.onclose = function () {
+    console.log('close');
+  };
+
+
 
   $.ajax( "api/stat/", {
     context: this,
