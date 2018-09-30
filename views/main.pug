@@ -41,6 +41,8 @@ html(lang="en")
 								a(data-toggle="collapse",data-parent="#accordion",href="#collapseOne",aria-expanded="true",aria-controls="collapseOne").card-link
 									span.fas.fa-plane
 									span &nbsp;Aircraft List
+								span.badge.badge-pill.badge-secondary.float-right(style="margin-top:0.2rem;",title="# of known stations")#aircraftCount 0
+								span.fa.fa-ban.float-right(style="margin-top:0.2rem;",title="No connection to server")#disconnected
 						div#collapseOne.collapse.show(data-parent="#accordion",role="tabpanel",aria-labelledby="headingOne",aria-expanded="true")
 							div.card-block
 								form

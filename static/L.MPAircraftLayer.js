@@ -94,7 +94,7 @@ L.MPAircraftLayer = L.MarkerClusterGroup.extend({
         var dt = last.time - ac.history[ac.history.length-2].time;
         if( dt > 0 ) last.speed = dist / dt * 1000;
       }
-      while( ac.history.length > 100 )
+      while( ac.history.length > 1000 )
         ac.history.shift()
 
     },this);

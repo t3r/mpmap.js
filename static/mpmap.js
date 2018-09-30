@@ -166,10 +166,22 @@ $(function() {
 
 //  var pilotList = L.pilotList({ position: 'topleft' }).addTo(map)
 //  var serverList = L.serverList({ position: 'bottomleft', selected: settings.server }).addTo(map)
+  function setConnected( flag ) {
+    if( flag ) {
+      $("#aircraftCount").css('visibility','visible');
+      $("#disconnected").css('visibility','hidden');
+    } else {
+      $("#aircraftCount").css('visibility','hidden');
+      $("#disconnected").css('visibility','visible');
+    }
+  }
+
+  setConnected(false);
 
   function setPilotsList(data) {
-      if( !(data && Array.isArray(data)) ) return;
+      data = data || [];
       var $list = $('#pilotsList');
+      $("#aircraftCount").html(data.length);
 
       $list.children("li").each( function() {
         var d = $(this).data("pilot");
@@ -204,17 +216,22 @@ $(function() {
           $list.append( $li );
         }
       }); 
-  }   
+  }
+
+  function haveData( data ) {
+    setConnected(true);
+    data.clients.sort(function(a,b) {
+      return a.callsign.localeCompare(b.callsign)
+    })
+    aircraftLayer.fire('mpdata',{ data: data },aircraftLayer)
+    setPilotsList( data.clients )
+  }
 
   var retryCnt = 3
   function loadData() {
     $.ajax( "api/stat/" + settings.server, {
       success: function(data) {
-        data.clients.sort(function(a,b) {
-          return a.callsign.localeCompare(b.callsign)
-        })
-        aircraftLayer.fire('mpdata',{ data: data },aircraftLayer)
-        setPilotsList( data.clients )
+        haveData( data );
         if( settings.refresh > 0 ) {
           setTimeout( function() {
             loadData()
@@ -222,6 +239,7 @@ $(function() {
         }
       },
       error: function(a,b,c) {
+        setConnected(false);
         console.log("AJAX error, retry=", retryCnt,a,b,c)
         if( retryCnt > 0 ) {
           retryCnt--;
@@ -238,7 +256,40 @@ $(function() {
     })
   }
 
-  loadData()
+//  loadData()
+
+  var ws = null;
+
+  function createWebsocket() {
+    var wsUrl = (window.location.protocol === 'https' ? 'wss' : 'ws') +
+                '://' + window.location.host + '/api/stream';
+
+    try {
+      ws = new WebSocket(wsUrl);
+    }
+    catch( ex ) {
+      setConnected(false);
+      console.log(ex);
+      setTimeout( createWebsocket, 2000 );
+    }
+    ws.onmessage = function (e) {
+      haveData( JSON.parse(e.data) );
+    };
+
+    ws.onopen = function () {
+      ws.send(JSON.stringify({
+        server: settings.server,
+        binary: false,
+      }));
+    };
+
+    ws.onclose = function () {
+      setConnected(false);
+      setTimeout( createWebsocket, 2000 );
+    };
+  }
+
+  createWebsocket();
 
   $.ajax( "api/stat/", {
     context: this,

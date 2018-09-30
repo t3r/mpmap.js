@@ -27,16 +27,7 @@ global.appRoot = path.resolve(__dirname);
 
 var app = express();
 
-/*
-if( app.get('env') !== 'development' ) {
-  console.log("Using https redirector")
-  // Production: redirect http to https
-  app.all('*', function(req,res,next) {
-    if( req.secure ) return next()
-    else return res.redirect( 'https://' + req.get('host') + req.originalUrl );
-  });
-}
-*/
+var expressWs = require('express-ws')(app);
 
 app.set('trust proxy', 1)
 app.use(helmet())

@@ -21,15 +21,15 @@ services:
     volumes:
       - type: tmpfs
         target: /tmp
-    deploy:
-      placement:
-        constraints: [node.role == manager]
-      replicas: 2
-      restart_policy:
-        condition: on-failure
-        max_attempts: 5
-        window: 1m
-      update_config:
-        parallelism: 1
-        delay: 10s
+#    deploy:
+#      placement:
+#        constraints: [node.role == manager]
+#      replicas: 2
+#      restart_policy:
+#        condition: on-failure
+#        max_attempts: 5
+#        window: 1m
+#      update_config:
+#        parallelism: 1
+#        delay: 10s
 
