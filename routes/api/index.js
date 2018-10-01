@@ -172,7 +172,6 @@ ServerObserver.prototype.subscribe = function(server,ws) {
         ws.send( JSON.stringify(data) )
       }
       catch( ex ) {
-        console.log(ex);
         this.unsubscribe( ws );
       }
     })
