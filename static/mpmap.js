@@ -207,7 +207,6 @@ $(function() {
   }
 
   function haveData( data ) {
-console.log("have data")
     data.clients.sort(function(a,b) {
       return a.callsign.localeCompare(b.callsign)
     })
@@ -244,21 +243,37 @@ console.log("have data")
   }
 
 //  loadData()
-  var connection = new WebSocket('ws://localhost:8080/api/stream' );
 
-  connection.onmessage = function (e) {
-    haveData( JSON.parse(e.data) );
-  };
+  var ws = null;
 
-  connection.onopen = function () {
-    connection.send(JSON.stringify({
-      server: settings.server,
-      binary: false,
-    }));
-  };
-  connection.onclose = function () {
-    console.log('close');
-  };
+  function createWebsocket() {
+    var wsUrl = (window.location.protocol === 'https' ? 'wss' : 'ws') +
+                '://' + window.location.host + '/api/stream';
+
+    try {
+      ws = new WebSocket(wsUrl);
+    }
+    catch( ex ) {
+      console.log(ex);
+      setTimeout( createWebsocket, 2000 );
+    }
+    ws.onmessage = function (e) {
+      haveData( JSON.parse(e.data) );
+    };
+
+    ws.onopen = function () {
+      ws.send(JSON.stringify({
+        server: settings.server,
+        binary: false,
+      }));
+    };
+
+    ws.onclose = function () {
+      setTimeout( createWebsocket, 2000 );
+    };
+  }
+
+  createWebsocket();
 
 
 

@@ -144,7 +144,6 @@ ServerObserver.prototype.loop = function() {
           ws.send( JSON.stringify(data) )
         }
         catch( ex ) {
-          console.log(ex);
           this.unsubscribe( ws );
         }
       }, this)
