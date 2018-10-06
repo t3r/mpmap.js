@@ -166,6 +166,17 @@ $(function() {
 
 //  var pilotList = L.pilotList({ position: 'topleft' }).addTo(map)
 //  var serverList = L.serverList({ position: 'bottomleft', selected: settings.server }).addTo(map)
+  function setConnected( flag ) {
+    if( flag ) {
+      $("#aircraftCount").css('visibility','visible');
+      $("#disconnected").css('visibility','hidden');
+    } else {
+      $("#aircraftCount").css('visibility','hidden');
+      $("#disconnected").css('visibility','visible');
+    }
+  }
+
+  setConnected(false);
 
   function setPilotsList(data) {
       data = data || [];
@@ -208,6 +219,7 @@ $(function() {
   }
 
   function haveData( data ) {
+    setConnected(true);
     data.clients.sort(function(a,b) {
       return a.callsign.localeCompare(b.callsign)
     })
@@ -227,6 +239,7 @@ $(function() {
         }
       },
       error: function(a,b,c) {
+        setConnected(false);
         console.log("AJAX error, retry=", retryCnt,a,b,c)
         if( retryCnt > 0 ) {
           retryCnt--;
@@ -255,6 +268,7 @@ $(function() {
       ws = new WebSocket(wsUrl);
     }
     catch( ex ) {
+      setConnected(false);
       console.log(ex);
       setTimeout( createWebsocket, 2000 );
     }
@@ -270,13 +284,12 @@ $(function() {
     };
 
     ws.onclose = function () {
+      setConnected(false);
       setTimeout( createWebsocket, 2000 );
     };
   }
 
   createWebsocket();
-
-
 
   $.ajax( "api/stat/", {
     context: this,
