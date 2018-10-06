@@ -168,8 +168,9 @@ $(function() {
 //  var serverList = L.serverList({ position: 'bottomleft', selected: settings.server }).addTo(map)
 
   function setPilotsList(data) {
-      if( !(data && Array.isArray(data)) ) return;
+      data = data || [];
       var $list = $('#pilotsList');
+      $("#aircraftCount").html(data.length);
 
       $list.children("li").each( function() {
         var d = $(this).data("pilot");
