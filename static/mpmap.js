@@ -220,46 +220,15 @@ $(function() {
 
   function haveData( data ) {
     setConnected(true);
-    data.clients.sort(function(a,b) {
+    data.data.clients.sort(function(a,b) {
       return a.callsign.localeCompare(b.callsign)
     })
-    aircraftLayer.fire('mpdata',{ data: data },aircraftLayer)
-    setPilotsList( data.clients )
+    aircraftLayer.fire('mpdata',{ data: data.data },aircraftLayer)
+    setPilotsList( data.data.clients )
+    $("#nrOfClients").html(data.nrOfClients);
   }
-
-  var retryCnt = 3
-  function loadData() {
-    $.ajax( "api/stat/" + settings.server, {
-      success: function(data) {
-        haveData( data );
-        if( settings.refresh > 0 ) {
-          setTimeout( function() {
-            loadData()
-          },settings.refresh*1000)
-        }
-      },
-      error: function(a,b,c) {
-        setConnected(false);
-        console.log("AJAX error, retry=", retryCnt,a,b,c)
-        if( retryCnt > 0 ) {
-          retryCnt--;
-          if( settings.refresh > 0 ) {
-            setTimeout( function() {
-              loadData()
-            },settings.refresh*1000)
-          }
-        } else {
-          alert("Can't load multiplayer data, please reload page")
-        }
-      },
-      timeout: 30000,
-    })
-  }
-
-//  loadData()
 
   var ws = null;
-
   function createWebsocket() {
     var wsUrl = (window.location.protocol === 'https' ? 'wss' : 'ws') +
                 '://' + window.location.host + '/api/stream';

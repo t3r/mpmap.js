@@ -134,14 +134,18 @@ function ServerObserver() {
 }
 
 ServerObserver.prototype.loop = function() {
-
+  let self = this;
   for( srv in this.observers ) {
 
     GetCachedStatus(srv,5001)
     .then( data => {
+      var toSend = JSON.stringify({
+        data: data,
+        nrOfClients: self.getNrOfClients(),
+      })
       this.observers[srv].forEach( ws => {
         try {
-          ws.send( JSON.stringify(data) )
+          ws.send( toSend )
         }
         catch( ex ) {
           this.unsubscribe( ws );
@@ -150,6 +154,7 @@ ServerObserver.prototype.loop = function() {
     })
     .catch( err => {
       console.log("Can't get cached status for ", srv, err );
+      //TODO: check this context
       this.observers[srv].forEach( ws => {
         ws.close()
       })
@@ -161,14 +166,27 @@ ServerObserver.prototype.loop = function() {
 
 }
 
+ServerObserver.prototype.getNrOfClients = function(server) {
+  let reply = 0
+  for( var server in this.observers ) {
+    reply += this.observers[server].length
+  }
+  return reply
+}
+
 ServerObserver.prototype.subscribe = function(server,ws) {
+  //console.log("subscribe",server,ws._socket.remoteAddress);
+  let self = this;
   this.unsubscribe(ws);
   (this.observers[server] = (this.observers[server] || [])).push(ws);
   try {
     GetCachedStatus(server,5001)
     .then( data => {
       try {
-        ws.send( JSON.stringify(data) )
+        ws.send( JSON.stringify({
+          data: data,
+          nrOfClients: self.getNrOfClients(),
+        }))
       }
       catch( ex ) {
         this.unsubscribe( ws );
