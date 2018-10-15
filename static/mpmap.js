@@ -230,7 +230,7 @@ $(function() {
 
   var ws = null;
   function createWebsocket() {
-    var wsUrl = (window.location.protocol === 'https' ? 'wss' : 'ws') +
+    var wsUrl = (window.location.protocol === 'https:' ? 'wss' : 'ws') +
                 '://' + window.location.host + '/api/stream';
 
     try {
