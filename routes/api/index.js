@@ -135,7 +135,7 @@ function ServerObserver() {
 
 ServerObserver.prototype.loop = function() {
   let self = this;
-  for( srv in this.observers ) {
+  for( srv in self.observers ) {
 
     GetCachedStatus(srv,5001)
     .then( data => {
@@ -143,22 +143,22 @@ ServerObserver.prototype.loop = function() {
         data: data,
         nrOfClients: self.getNrOfClients(),
       })
-      this.observers[srv].forEach( ws => {
+      self.observers[srv].forEach( ws => {
         try {
           ws.send( toSend )
         }
         catch( ex ) {
-          this.unsubscribe( ws );
+          self.unsubscribe( ws );
         }
-      }, this)
+      }, self)
     })
     .catch( err => {
       console.log("Can't get cached status for ", srv, err );
       //TODO: check this context
-      this.observers[srv].forEach( ws => {
+      self.observers[srv].forEach( ws => {
         ws.close()
       })
-      delete this.observers[srv];
+      delete self.observers[srv];
     })
   }
 
