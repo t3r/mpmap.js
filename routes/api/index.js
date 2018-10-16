@@ -204,7 +204,6 @@ ServerObserver.prototype.subscribe = function(server,ws) {
 }
 
 ServerObserver.prototype.unsubscribe = function(ws) {
-  console.log("unsubscribing client");
   for( var s in this.observers ) {
     let idx = this.observers[s].indexOf(ws);
     if( idx == -1 ) continue;
@@ -220,6 +219,7 @@ const serverObserver = new ServerObserver();
 router.ws('/stream', function(ws, req) {
 
   ws.on('message', function(msg) {
+    console.log("ws msg from",ws._socket._peername, msg );
     let options = null;
     try {
       options = JSON.parse(msg);
@@ -235,7 +235,8 @@ router.ws('/stream', function(ws, req) {
     serverObserver.unsubscribe( ws );
   });
   ws.on('close', function(msg) {
-    serverObserver.unsubscribe( ws );
+    console.log("ws closed",msg,ws._socket._peername);
+    //serverObserver.unsubscribe( ws );
   });
 });
 
