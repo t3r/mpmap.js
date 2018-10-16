@@ -234,6 +234,9 @@ router.ws('/stream', function(ws, req) {
   ws.on('error', function(msg) {
     serverObserver.unsubscribe( ws );
   });
+  ws.on('close', function(msg) {
+    serverObserver.unsubscribe( ws );
+  });
 });
 
 module.exports = router

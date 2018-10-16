@@ -258,6 +258,13 @@ $(function() {
     };
   }
 
+  window.onbeforeunload = function() {
+    if( ws ) {
+      ws.onclose = function() {}
+      ws.close();
+    }
+  };
+
   createWebsocket();
 
   $.ajax( "api/stat/", {
