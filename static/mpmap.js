@@ -233,6 +233,8 @@ $(function() {
     var wsUrl = (window.location.protocol === 'https:' ? 'wss' : 'ws') +
                 '://' + window.location.host + '/api/stream';
 
+    var wsPing = null;
+
     try {
       ws = new WebSocket(wsUrl);
     }
@@ -241,6 +243,7 @@ $(function() {
       console.log(ex);
       setTimeout( createWebsocket, 2000 );
     }
+
     ws.onmessage = function (e) {
       haveData( JSON.parse(e.data) );
     };
@@ -250,10 +253,25 @@ $(function() {
         server: settings.server,
         binary: false,
       }));
+
+      wsPing = setInterval( function() {
+        try {
+          console.log("PING");
+          ws.send(JSON.stringify({
+          }));
+        }
+        catch( ex ) {
+          console.log(ex);
+        }
+      }, 5000 );
     };
 
     ws.onclose = function () {
       setConnected(false);
+      if( wsPing != null ) {
+        clearInterval( wsPing )
+        wsPing = null;
+      }
       setTimeout( createWebsocket, 2000 );
     };
   }
