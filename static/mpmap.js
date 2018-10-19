@@ -256,7 +256,6 @@ $(function() {
 
       wsPing = setInterval( function() {
         try {
-          console.log("PING");
           ws.send(JSON.stringify({
           }));
         }

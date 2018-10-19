@@ -47,7 +47,7 @@ L.MPAircraftLayer = L.MarkerClusterGroup.extend({
       ac.vanished = ( now - lastSeen > 15000 );
     }
     expired.forEach(function(callsign) {
-      console.log("Goodbye",callsign)
+      // console.log("Goodbye",callsign)
       delete (this._aircraft[callsign])
     },this)
 
@@ -74,7 +74,7 @@ L.MPAircraftLayer = L.MarkerClusterGroup.extend({
           history: [],
           layer: null,
         };
-        console.log("Hello",client.callsign)
+        // console.log("Hello",client.callsign)
       }
       ac.history.push({
           position: {
