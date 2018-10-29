@@ -66,6 +66,10 @@ html(lang="en")
 											option(value="three") 3
 										small.form-text.text-muted Choose the server to query
 
+									div.form-group
+										input(type="number",min="0",max="20").form-control#clusterZoom
+										small.form-text.text-muted Cluster Icons at this Zoom (0=disable)
+
 									div.form-check
 										input(type="checkbox").form-check-input#cookieCheck
 										label(for="cookieCheck").form-check-label Remember Settings

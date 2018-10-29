@@ -12,8 +12,11 @@ $(function() {
     this.baseLayer = props.baseLayer || 'OpenStreetMap';
     this.overlays = props.overlays || {};
     this.saveCookie = props.saveCookie;
+    this.clusterZoom = props.clusterZoom || 12;
 
     $('#cookieCheck:checkbox').prop('checked', this.saveCookie ? true : false );
+    $('#clusterZoom').val( this.clusterZoom );
+
     function getUrlParameter(sParam,dflt) {
       var sPageURL = decodeURIComponent(window.location.search.substring(1)),
           sURLVariables = sPageURL.split('&'),
@@ -157,7 +160,9 @@ $(function() {
   }
 
 
-  var aircraftLayer = L.mpAircraftLayer().addTo(map);
+  var aircraftLayer = L.mpAircraftLayer(null,{
+    disableClusteringAtZoom: settings.clusterZoom,
+  }).addTo(map);
 
   $("#mpserverSelect").on('change', function (e) {
     settings.server = this.value;
@@ -314,6 +319,15 @@ $(function() {
       delete settings.saveCookie;
     }
     settings.save();
+  });
+
+  $('#clusterZoom').change(function() {
+    var n = Number($(this).val());
+    if( !Number.isNaN(n) ) {
+      settings.clusterZoom = n;
+      aircraftLayer.options.disableClusteringAtZoom = settings.clusterZoom;
+      settings.save();
+    }
   });
 
 })

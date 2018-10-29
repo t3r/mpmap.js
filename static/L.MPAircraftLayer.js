@@ -3,7 +3,6 @@
 L.MPAircraftLayer = L.MarkerClusterGroup.extend({
 
   options: {
-    disableClusteringAtZoom: 12,
     spiderfyOnMaxZoom: false,
     iconCreateFunction: function (cluster) {
       var childCount = cluster.getChildCount();
@@ -18,6 +17,11 @@ L.MPAircraftLayer = L.MarkerClusterGroup.extend({
 
       return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
     },
+  },
+
+  initialize : function(layers, options) {
+    L.MarkerClusterGroup.prototype.initialize.call(this, layers, options )
+    L.setOptions(this, options);
   },
 
   onAdd: function(map) {
