@@ -162,7 +162,7 @@ ServerObserver.prototype.loop = function() {
     })
   }
 
-  setTimeout( function(self) { self.loop() }, 10000, this );
+  setTimeout( function(self) { self.loop() }, 10000, self );
 
 }
 
@@ -175,10 +175,10 @@ ServerObserver.prototype.getNrOfClients = function(server) {
 }
 
 ServerObserver.prototype.subscribe = function(server,ws) {
-  //console.log("subscribe",server,ws._socket.remoteAddress);
+  console.log("subscribe",server,ws._socket.remoteAddress);
   let self = this;
-  this.unsubscribe(ws);
-  (this.observers[server] = (this.observers[server] || [])).push(ws);
+  self.unsubscribe(ws);
+  (self.observers[server] = (self.observers[server] || [])).push(ws);
   try {
     GetCachedStatus(server,5001)
     .then( data => {
@@ -189,29 +189,45 @@ ServerObserver.prototype.subscribe = function(server,ws) {
         }))
       }
       catch( ex ) {
-        this.unsubscribe( ws );
+        self.unsubscribe( ws );
       }
     })
     .catch( err => {
       console.log("Can't get cached status for ", server, err );
-      this.unsubscribe();
+      self.unsubscribe();
     })
   }
   catch( ex ) {
     console.log(ex);
-    this.unsubscribe( ws );
+    self.unsubscribe( ws );
   }
 }
 
 ServerObserver.prototype.unsubscribe = function(ws) {
+  console.log("unsubscribe",ws._socket.remoteAddress);
   for( var s in this.observers ) {
     let idx = this.observers[s].indexOf(ws);
+    console.log("found at",s,"with index",idx);
     if( idx == -1 ) continue;
     this.observers[s].splice(idx,1);
     if( this.observers[s].length == 0 ) {
       delete this.observers[s];
     }
   }
+}
+
+ServerObserver.prototype.json = function() {
+  var r = {};
+  for( var s in this.observers ) {
+    let a = []
+    r[s] = a;
+    this.observers[s].forEach( ws => {
+      a.push({
+        host: ws._socket._peername
+      })
+    })
+  }
+  return r
 }
 
 const serverObserver = new ServerObserver();
@@ -238,6 +254,10 @@ router.ws('/stream', function(ws, req) {
     console.log("ws closed",msg,ws._socket._peername);
     //serverObserver.unsubscribe( ws );
   });
+});
+
+router.route('/obs').get(function(req, res) {
+  return res.json(serverObserver.json());
 });
 
 module.exports = router
