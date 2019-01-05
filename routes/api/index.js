@@ -252,7 +252,7 @@ router.ws('/stream', function(ws, req) {
   });
   ws.on('close', function(msg) {
     console.log("ws closed",msg,ws._socket._peername);
-    //serverObserver.unsubscribe( ws );
+    serverObserver.unsubscribe( ws );
   });
 });
 
