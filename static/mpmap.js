@@ -166,6 +166,10 @@ $(function() {
 
   $("#mpserverSelect").on('change', function (e) {
     settings.server = this.value;
+    ws.send(JSON.stringify({
+        server: settings.server,
+        binary: false,
+    }));
     settings.save();
   });
 
