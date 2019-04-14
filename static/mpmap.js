@@ -240,7 +240,7 @@ $(function() {
   var ws = null;
   function createWebsocket() {
     var wsUrl = (window.location.protocol === 'https:' ? 'wss' : 'ws') +
-                '://' + window.location.host + '/api/stream';
+                '://' + window.location.host + window.location.pathname + 'api/stream';
 
     var wsPing = null;
 
