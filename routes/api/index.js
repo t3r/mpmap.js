@@ -91,8 +91,19 @@ router.route('/stat/').get(function(req, res) {
     var response = {}
     data.forEach(function(e) {
       if( e.rqtype === "TXT" ) {
-        var b = new Buffer(e.entries[0][0].split("=")[1],'base64')
-        var data = JSON.parse(b.toString())
+        let entry = e.entries[0][0]
+        if( !entry.startsWith( 'flightgear-mpserver=' ) )
+          return
+
+        let b = new Buffer.from(entry.substring(20),'base64')
+        let data
+        try {
+          data = JSON.parse(b.toString())
+        }
+        catch( ex ) {
+          console.error("invalid json",e)
+          return
+        }
         response[data.name] = {
           dn: e.rqname,
           'location': data.location,
