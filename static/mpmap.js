@@ -7,7 +7,7 @@ $(function() {
     this.lat = Number(getUrlParameter('lat',props.lat ||53.5));
     this.lng = Number(getUrlParameter('lng',props.lng ||10));
     this.zoom = Number(getUrlParameter('zoom',props.zoom||3));
-    this.server = getUrlParameter('zoom',props.server||'mpserver01.flightgear.org');
+    this.server = getUrlParameter('server',props.server||'mpserver01.flightgear.org');
     this.refresh = Number(getUrlParameter('refresh',props.refresh||10));
     this.baseLayer = props.baseLayer || 'OpenStreetMap';
     this.overlays = props.overlays || {};
