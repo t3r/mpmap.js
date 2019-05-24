@@ -105,8 +105,8 @@ L.AircraftIcon = L.DivIcon.extend({
     L.DivIcon.prototype.initialize.call(this,options);
     L.Util.setOptions(this, {
       html: L.Util.template(
-          '<img src="acicons/{icon}.png" style="transform-origin:50% 50%;transform: rotate({heading}deg);" {extra}>' +
-          '<div class="fg-aircraft-label {cls}">' +
+          '<div class="acicon acicon-{icon} {expired} {rotating}" style="transform: rotate({heading}deg);"></div>' +
+          '<div class="fg-aircraft-label {expired}">' +
           '<div><span>{callsign}</span>&nbsp;<span>{model}</span></div>' +
           '<div><span>F{level}</span>&nbsp;<span>{kts}KT</span></div>' +
           '<div style="clear: both"></div></div>', {
@@ -115,8 +115,8 @@ L.AircraftIcon = L.DivIcon.extend({
           level: Math.round(options.position.alt/100),
           kts: Math.round(options.speed*3600/1852),
           heading: options.heading.toFixed(0),
-          cls: vanished ? 'fg-expired-ac': '',
-          extra: vanished ? 'class="fg-expired-ac"' : rotating ? 'class="rotating"' : '',
+          expired: vanished ? 'fg-expired-ac': '',
+          rotating: vanished ? 'rotating': '',
           icon: modelIcon,
       })
     })

@@ -1,4 +1,4 @@
-FROM node:8-alpine
+FROM node:12-alpine
 LABEL maintainer="Torsten Dreyer <torsten@t3r.de>"
 LABEL version="1.0"
 LABEL description="FlightGear multiplayer map (the nodejs way)"
