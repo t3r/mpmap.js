@@ -156,9 +156,11 @@ ServerObserver.prototype.loop = function() {
       })
       self.observers[srv].forEach( ws => {
         try {
+          console.log(srv, "sending to", ws._socket._peername )
           ws.send( toSend )
         }
         catch( ex ) {
+          console.log("error sending",ex)
           self.unsubscribe( ws );
         }
       }, self)
@@ -177,7 +179,7 @@ ServerObserver.prototype.loop = function() {
 
 }
 
-ServerObserver.prototype.getNrOfClients = function(server) {
+ServerObserver.prototype.getNrOfClients = function() {
   let reply = 0
   for( var server in this.observers ) {
     reply += this.observers[server].length
@@ -186,10 +188,15 @@ ServerObserver.prototype.getNrOfClients = function(server) {
 }
 
 ServerObserver.prototype.subscribe = function(server,ws) {
-  console.log("subscribe",server,ws._socket.remoteAddress);
+  console.log("subscribe",server,ws._socket.remoteAddress)
   let self = this;
+  console.log("unsubscribing before subscribing")
   self.unsubscribe(ws);
+
+  if( !ws ) return
+
   (self.observers[server] = (self.observers[server] || [])).push(ws);
+  console.log("subscribed to",server,ws._socket.remoteAddress)
   try {
     GetCachedStatus(server,5001)
     .then( data => {
@@ -200,6 +207,7 @@ ServerObserver.prototype.subscribe = function(server,ws) {
         }))
       }
       catch( ex ) {
+        console.error("error sending",ex)
         self.unsubscribe( ws );
       }
     })
@@ -215,6 +223,7 @@ ServerObserver.prototype.subscribe = function(server,ws) {
 }
 
 ServerObserver.prototype.unsubscribe = function(ws) {
+  if( !(ws && ws._socket) ) return
   console.log("unsubscribe",ws._socket.remoteAddress);
   for( var s in this.observers ) {
     let idx = this.observers[s].indexOf(ws);
@@ -259,6 +268,7 @@ router.ws('/stream', function(ws, req) {
   });
 
   ws.on('error', function(msg) {
+    console.log("error receiving",msg)
     serverObserver.unsubscribe( ws );
   });
   ws.on('close', function(msg) {

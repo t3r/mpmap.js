@@ -263,6 +263,7 @@ $(function() {
         binary: false,
       }));
 
+/*
       wsPing = setInterval( function() {
         try {
           ws.send(JSON.stringify({
@@ -272,6 +273,7 @@ $(function() {
           console.log(ex);
         }
       }, 5000 );
+*/
     };
 
     ws.onclose = function () {

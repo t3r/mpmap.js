@@ -116,7 +116,7 @@ L.AircraftIcon = L.DivIcon.extend({
           kts: Math.round(options.speed*3600/1852),
           heading: options.heading.toFixed(0),
           expired: vanished ? 'fg-expired-ac': '',
-          rotating: vanished ? 'rotating': '',
+          rotating: rotating ? 'rotating': '',
           icon: modelIcon,
       })
     })
