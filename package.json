@@ -33,7 +33,7 @@
     "math3d": "^0.2.2",
     "morgan": "^1.10.0",
     "node-cache": "^4.2.1",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "request": "^2.88.2",
     "requirejs": "^2.3.6",
     "serve-favicon": "^2.5.0"
