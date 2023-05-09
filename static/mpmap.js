@@ -3,8 +3,14 @@ $(function() {
   function Settings() {
 
     var props = Cookies.get('mpmap-settings' ) || {};
-    if( typeof(props) === 'string' )
-      props = JSON.parse(props);
+    if( typeof(props) === 'string' ) {
+      try {
+        props = JSON.parse(props);
+      }
+      catch {
+        props = {}
+      }
+    }
 
     this.lat = Number(getUrlParameter('lat',props.lat ||53.5));
     this.lng = Number(getUrlParameter('lng',props.lng ||10));
