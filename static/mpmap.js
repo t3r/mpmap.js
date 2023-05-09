@@ -112,19 +112,15 @@ $(function() {
     }),
   }
 
+  const k = '8b34ad4c42a4587ff7f7697c0cc47a18';
   var overlays = {
-    "Terrain": new L.TileLayer('http://c.tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png', {
-        minZoom: 0,
-        maxZoom: 18,
-        attribution: 'Map data &copy; <a target="_blank" href="//openstreetmap.org">OpenStreetMap</a> contributors'
-      }),
 
-    "OpenAIP":  new L.TileLayer("http://{s}.tile.maps.openaip.net/geowebcache/service/tms/1.0.0/openaip_basemap@EPSG%3A900913@png/{z}/{x}/{y}.png", {
+    "OpenAIP":  new L.TileLayer("https://{s}.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=" + k, {
+                attribution: '&copy; <a target="_blank" href="https://www.openaip.net">openaip.net</a>',
                 maxZoom: 14,
-                minZoom: 5,
-                tms: true,
+                minZoom: 7,
                 detectRetina: true,
-                subdomains: '12',
+                subdomains: 'abc',
                 format: 'image/png',
                 transparent: true
             }),
