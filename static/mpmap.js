@@ -2,7 +2,9 @@ $(function() {
 
   function Settings() {
 
-    var props = Cookies.getJSON('mpmap-settings' ) || {};
+    var props = Cookies.get('mpmap-settings' ) || {};
+    if( typeof(props) === 'string' )
+      props = JSON.parse(props);
 
     this.lat = Number(getUrlParameter('lat',props.lat ||53.5));
     this.lng = Number(getUrlParameter('lng',props.lng ||10));
@@ -35,7 +37,7 @@ $(function() {
 
   Settings.prototype.save = function() {
     if( this.saveCookie )
-      Cookies.set('mpmap-settings', this )
+      Cookies.set('mpmap-settings', JSON.stringify(this) )
     else
       Cookies.remove('mpmap-settings');
   }

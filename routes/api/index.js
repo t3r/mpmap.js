@@ -17,11 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-var router = require('express').Router()
-var MpServerCli = require('./mpserver-cli')
+const router = require('express').Router()
+const MpServerCli = require('./mpserver-cli')
+const util = require('util');
 
-var NodeCache = require('node-cache')
-var dns = require('dns')
+const NodeCache = require('node-cache');
+const dnsResolve = util.promisify(require('dns').resolve);
 
 const StatusCache = new NodeCache({
   stdTTL: 5,
@@ -30,113 +31,77 @@ const StatusCache = new NodeCache({
   errorOnMissing: false,
 })
 
-function GetCachedStatus( server, port ) {
+GetCachedStatus = async( server, port ) => {
   port = port || 5001
-  return new Promise(function(resolve,reject) {
-    StatusCache.get( server, function(err,val) {
-      if( err ) return reject(err)
-      if( val ) {
-        return resolve(val)
-      }
+  let mpserver = StatusCache.get( server );
+  if( mpserver == undefined ) {
+    mpserver = await MpServerCli(server,port);
+    StatusCache.set( server, mpserver );
+  }
 
-      MpServerCli(server,port)
-      .then(function(data) {
-        StatusCache.set( server, data, function(err,success) {
-          if( err ) return reject(err)
-          resolve(data)
-        })
-      })
-      .catch(function(err) {
-        reject(err)
-      })
-    });
-  })
+  return mpserver;
 }
 
 
-function ResolveDNS( name, type ) {
-  return new Promise(function(resolve,reject) {
-    dns.resolve(name, type, function(err,data) {
-      if( err ) reject(err)
-      else resolve({ entries: data, rqname: name, rqtype: type })
-    })
-  })
+ResolveDNS = async ( name, type ) => {
+  const response = await dnsResolve(name, type );
+  return { entries: response||[], rqname: name, rqtype: type }
 }
 
-router.route('/stat/').get(function(req, res) {
+router.route('/stat/').get(async(req, res) => {
 
+  const dnsname = "_fgms._udp.flightgear.org";
+  const srvData = await ResolveDNS(dnsname,"SRV");
+  var prms = []
   var srvRecords = {}
-  var dnsname = "_fgms._udp.flightgear.org";
-
-  ResolveDNS(dnsname, "SRV")
-  .then(function(data) {
-
-    var prms = []
-    var entries = data.entries || []
-
-
-    entries.sort( function(a,b) {
-      return a.name.localeCompare(b.name)
-    })
-
-    entries.forEach( function(entry) {
-      if( entry.port <= 0 ) return
-      srvRecords[entry.name] = entry
-      prms.push( ResolveDNS(entry.name,"TXT") )
-    })
-
-    return Promise.all( prms )
+  srvData.entries.forEach( e => {
+    if( e.port <= 0 ) return;
+    srvRecords[e.name] = e;
+    prms.push( ResolveDNS(e.name,"TXT") );
   })
-  .then( function( data ) {
-    var response = {}
-    data.forEach(function(e) {
-      if( e.rqtype === "TXT" ) {
-        let entry = e.entries[0][0]
-        if( !entry.startsWith( 'flightgear-mpserver=' ) )
-          return
 
-        let b = new Buffer.from(entry.substring(20),'base64')
-        let data
-        try {
-          data = JSON.parse(b.toString())
-        }
-        catch( ex ) {
-          console.error("invalid json",e)
-          return
-        }
-        response[data.name] = {
-          dn: e.rqname,
-          'location': data.location,
-          port: srvRecords[e.rqname].port
-        }
+  const txtData =  await Promise.all( prms );
+
+  var response = {}
+  txtData.forEach(e => {
+    if( e.rqtype === "TXT" ) {
+      let entry = e.entries[0][0]
+      if( !entry.startsWith( 'flightgear-mpserver=' ) )
+         return
+
+      let b = new Buffer.from(entry.substring(20),'base64')
+      let data
+      try {
+        data = JSON.parse(b.toString())
       }
-    })
-    return res.json(response)
+      catch( ex ) {
+        console.error("invalid json",e)
+        return
+      }
+      response[data.name] = {
+        dn: e.rqname,
+        'location': data.location,
+        port: srvRecords[e.rqname].port
+      }
+    }
   })
-  .catch(function(err) {
-    console.log(err)
-    return res.status(500).render('error', {
-      message : err.message,
-      error : err
-    })
-  })
-
+  return res.json(response)
 })
 
-router.route('/stat/:server/:port*?').get(function(req, res) {
+router.route('/stat/:server/:port*?').get(async (req, res) => {
 
   var port = req.params.port || 5001
 
-  GetCachedStatus(req.params.server,port)
-  .then(function(data) {
+  try {
+    const data = await GetCachedStatus(req.params.server,port);
     return res.json(data)
-  })
-  .catch(function(err) {
+  }
+  catch(err) {
     return res.status(500).render('error', {
       message : err.message,
       error : err
     })
-  })
+  }
 })
 
 function ServerObserver() {
@@ -144,35 +109,39 @@ function ServerObserver() {
   this.loop();
 }
 
-ServerObserver.prototype.loop = function() {
+ServerObserver.prototype.loop = async function() {
   let self = this;
   for( srv in self.observers ) {
 
-    GetCachedStatus(srv,5001)
-    .then( data => {
-      var toSend = JSON.stringify({
-        data: data,
-        nrOfClients: self.getNrOfClients(),
-      })
-      self.observers[srv].forEach( ws => {
-        try {
-          console.log(srv, "sending to", ws._socket._peername )
-          ws.send( toSend )
-        }
-        catch( ex ) {
-          console.log("error sending",ex)
-          self.unsubscribe( ws );
-        }
-      }, self)
-    })
-    .catch( err => {
-      console.log("Can't get cached status for ", srv, err );
-      //TODO: check this context
+    let data
+    try {
+      data = await GetCachedStatus(srv,5001)
+    }
+    catch( err ) {
+      console.error("Can't get cached status for ", srv, err );
       self.observers[srv].forEach( ws => {
         ws.close()
       })
       delete self.observers[srv];
-    })
+      continue;
+    }
+
+
+    let toSend = JSON.stringify({
+        data: data,
+        nrOfClients: self.getNrOfClients(),
+      });
+
+    self.observers[srv].forEach( ws => {
+      try {
+        console.log(srv, "sending to", ws._socket._peername )
+        ws.send( toSend )
+      }
+      catch( ex ) {
+        console.error("error sending",ex)
+        self.unsubscribe( ws );
+      }
+    }, self);
   }
 
   setTimeout( function(self) { self.loop() }, 10000, self );
@@ -187,10 +156,8 @@ ServerObserver.prototype.getNrOfClients = function() {
   return reply
 }
 
-ServerObserver.prototype.subscribe = function(server,ws) {
-  console.log("subscribe",server,ws._socket.remoteAddress)
+ServerObserver.prototype.subscribe = async function(server,ws) {
   let self = this;
-  console.log("unsubscribing before subscribing")
   self.unsubscribe(ws);
 
   if( !ws ) return
@@ -198,26 +165,20 @@ ServerObserver.prototype.subscribe = function(server,ws) {
   (self.observers[server] = (self.observers[server] || [])).push(ws);
   console.log("subscribed to",server,ws._socket.remoteAddress)
   try {
-    GetCachedStatus(server,5001)
-    .then( data => {
-      try {
-        ws.send( JSON.stringify({
-          data: data,
-          nrOfClients: self.getNrOfClients(),
-        }))
-      }
-      catch( ex ) {
-        console.error("error sending",ex)
-        self.unsubscribe( ws );
-      }
-    })
-    .catch( err => {
-      console.log("Can't get cached status for ", server, err );
-      self.unsubscribe();
-    })
+    const data = await GetCachedStatus(server,5001)
+    try {
+      ws.send( JSON.stringify({
+        data: data,
+        nrOfClients: self.getNrOfClients(),
+      }))
+    }
+    catch( ex ) {
+      console.error("error sending",ex)
+      self.unsubscribe( ws );
+    }
   }
   catch( ex ) {
-    console.log(ex);
+    console.error(ex);
     self.unsubscribe( ws );
   }
 }
@@ -268,7 +229,7 @@ router.ws('/stream', function(ws, req) {
   });
 
   ws.on('error', function(msg) {
-    console.log("error receiving",msg)
+    console.error("error receiving",msg)
     serverObserver.unsubscribe( ws );
   });
   ws.on('close', function(msg) {

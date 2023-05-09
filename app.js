@@ -30,7 +30,7 @@ var app = express();
 var expressWs = require('express-ws')(app);
 
 app.set('trust proxy', 1)
-app.use(helmet())
+//app.use(helmet())
 app.use(require('compression')())
 
 // view engine setup: pug
@@ -47,7 +47,7 @@ app.use('/lb', express.static(path.join(__dirname, 'node_modules/leaflet-bing-la
 app.use('/lmc', express.static(path.join(__dirname, 'node_modules/leaflet.markercluster/dist')));
 app.use('/lap', express.static(path.join(__dirname, 'node_modules/leaflet-ant-path/dist')));
 app.use('/j', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
-app.use('/jc', express.static(path.join(__dirname, 'node_modules/js-cookie/src')));
+app.use('/jc', express.static(path.join(__dirname, 'node_modules/js-cookie/dist')));
 app.use('/b', express.static(path.join(__dirname, 'node_modules/bootstrap/dist')));
 app.use('/fa', express.static(path.join(__dirname, 'node_modules/@fortawesome/fontawesome-free')));
 app.use(express.static(path.join(__dirname, 'static')));
