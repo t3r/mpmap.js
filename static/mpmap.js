@@ -314,6 +314,9 @@ $(function() {
           selected: data[name].dn === settings.server,
         }));
       }
+      $select.html($("option", $(this)).sort(function(a, b) {
+        return $(a).text().localeCompare( $(b).text() );
+      }));
     },  
     error: function(a,b,c) {
       console.log("AJAX error", a,b,c)
