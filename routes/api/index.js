@@ -132,7 +132,7 @@ ServerObserver.prototype.loop = async function() {
         nrOfClients: self.getNrOfClients(),
       });
 
-    self.observers[srv].forEach( ws => {
+    (self.observers[srv] ||[]).forEach( ws => {
       try {
         console.log(srv, "sending to", ws._socket._peername )
         ws.send( toSend )
