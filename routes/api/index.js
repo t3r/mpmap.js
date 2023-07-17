@@ -51,7 +51,20 @@ ResolveDNS = async ( name, type ) => {
 router.route('/stat/').get(async(req, res) => {
 
   const dnsname = "_fgms._udp.flightgear.org";
-  const srvData = await ResolveDNS(dnsname,"SRV");
+  let srvData;
+  try {
+    srvData = await ResolveDNS(dnsname,"SRV");
+  }
+  catch( err ) {
+    console.error( "DNS lookup error, using only mpserver01", err );
+    srvData = {
+      entries: [
+      {
+        port: 5000,
+        name:  'mpserver01.flightgear.org.',
+      }
+    ]};
+  }
   var prms = []
   var srvRecords = {}
   srvData.entries.forEach( e => {
