@@ -69,6 +69,7 @@ const ModelIcons = {
   "mp-nimitz": "fg_carrier",
   "mp-eisenhower": "fg_carrier",
   "mp-foch": "fg_carrier",
+  "mp-clemenceau": "fg_carrier",
 
   "OV10": "ov10",
 
