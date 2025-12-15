@@ -22,6 +22,8 @@ const ModelIcons = {
   "pa28": "singleprop",
   "pc7": "singleprop",
   "j3cub": "singleprop",
+  "pa38": "singleprop",
+  "C208B": "singleprop",
 
   "c310": "twinprop",
   "c310": "twinprop",
@@ -34,6 +36,9 @@ const ModelIcons = {
   "dc3": "twinprop",
   "fokker50": "twinprop",
   "SenecaII": "twinprop",
+  "DHC6": "twinprop",
+  "DHC6F": "twinprop",
+  "DHC6S": "twinprop",
 
   "Citation": "smalljet",
   "Bravo": "smalljet",
