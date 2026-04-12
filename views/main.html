@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+  <head>
+    <title>FlightGear &#x3BC; - The MultiPlayer Map</title>
+    <meta charset="utf-8" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="FlightGear μ" />
+    <link rel="shortcut icon" href="images/MU_logo-196.png" sizes="196x196" />
+    <link rel="apple-touch-icon" href="images/MU_logo-196.png" sizes="196x196" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    __MPMAP_VITE_CSS__
+    <script>
+      window.MPMAP_OPENAIP_API_KEY = __MPMAP_OPENAIP_API_KEY__;
+    </script>
+    __MPMAP_VITE_JS__
+  </head>
+  <body class="h-100">
+    <div class="wrapper">
+      <nav id="sidebar" class="sidebarActivation">
+        <h3><img src="images/MU_logo.svg" style="height: 1.5em" alt="" /> FlightGear</h3>
+        <div id="accordion" role="tablist">
+          <div class="card">
+            <div class="card-header" role="tab" id="headingOne">
+              <div class="mb-0">
+                <a
+                  class="card-link"
+                  href="#collapseOne"
+                  role="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  <span class="fas fa-plane"></span><span>&nbsp;Aircraft List</span>
+                </a>
+                <span
+                  class="badge text-bg-secondary rounded-pill float-end"
+                  style="margin-top: 0.2rem"
+                  title="# of known stations"
+                  id="aircraftCount"
+                  >0</span>
+                <span
+                  class="fa fa-ban float-end"
+                  style="margin-top: 0.2rem"
+                  title="No connection to server"
+                  id="disconnected"
+                ></span>
+              </div>
+            </div>
+            <div
+              id="collapseOne"
+              class="collapse show"
+              data-bs-parent="#accordion"
+              role="tabpanel"
+              aria-labelledby="headingOne"
+              aria-expanded="true"
+            >
+              <div class="card-body">
+                <form>
+                  <div class="mb-3">
+                    <input type="text" placeholder="Filter.." class="form-control form-control-sm" />
+                  </div>
+                  <div class="mb-3">
+                    <ul class="list-group" id="pilotsList"></ul>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" role="tab" id="headingTwo">
+              <div class="mb-0">
+                <a
+                  class="card-link"
+                  href="#collapseTwo"
+                  role="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo"
+                  aria-expanded="false"
+                  aria-controls="collapseTwo"
+                >
+                  <span class="fas fa-cog"></span><span>&nbsp;Settings</span>
+                </a>
+              </div>
+            </div>
+            <div
+              id="collapseTwo"
+              class="collapse"
+              data-bs-parent="#accordion"
+              role="tabpanel"
+              aria-labelledby="headingTwo"
+              aria-expanded="false"
+            >
+              <div class="card-body">
+                <form>
+                  <div class="mb-3">
+                    <select class="form-select form-select-sm" id="mpserverSelect">
+                      <option value="one">1</option>
+                      <option value="two">2</option>
+                      <option value="three">3</option>
+                    </select>
+                    <small class="form-text text-muted">Choose the server to query</small>
+                  </div>
+                  <div class="mb-3">
+                    <input type="number" min="0" max="20" class="form-control" id="clusterZoom" />
+                    <small class="form-text text-muted">Cluster Icons at this Zoom (0=disable)</small>
+                  </div>
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="cookieCheck" />
+                    <label for="cookieCheck" class="form-check-label">Remember Settings</label>
+                    <small class="form-text text-muted"
+                      >Check this to store settings and map state in a cookie</small
+                    >
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" role="tab" id="headingThree">
+              <div class="mb-0">
+                <a
+                  class="card-link"
+                  href="#collapseThree"
+                  role="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapseThree"
+                  aria-expanded="false"
+                  aria-controls="collapseThree"
+                >
+                  <span class="fas fa-info-circle"></span><span>&nbsp;About</span>
+                </a>
+              </div>
+            </div>
+            <div
+              id="collapseThree"
+              class="collapse"
+              data-bs-parent="#accordion"
+              role="tabpanel"
+              aria-labelledby="headingThree"
+              aria-expanded="false"
+            >
+              <div class="card-body">
+                <p>
+                  This is <a href="http://www.flightgear.org">FlightGear</a> μ (mju) aka mpmap.js, a
+                  multiplayer map based on node.js with the
+                  <a href="https://github.com/t3r/mpmap.js">source code on github</a>.
+                </p>
+                <p>
+                  Looks like there are <span class="fw-bold" id="nrOfClients">0</span> users looking at
+                  this map
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <nav id="content">
+        <div id="map"></div>
+        <button id="sidebarCollapse" class="btn btn-info sidebarActivation" type="button"></button>
+      </nav>
+    </div>
+  </body>
+</html>

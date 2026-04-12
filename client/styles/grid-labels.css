@@ -1,0 +1,9 @@
+.leaflet-grid-label .lng {
+  margin-left: 8px;
+  transform: rotate(90deg);
+}
+
+.leaflet-grid-label .lat,
+.leaflet-grid-label .lng {
+  text-shadow: -2px 0 #fff, 0 2px #fff, 2px 0 #fff, 0 -2px #fff;
+}

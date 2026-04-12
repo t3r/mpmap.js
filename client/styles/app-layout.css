@@ -1,0 +1,155 @@
+/* App shell: full viewport, flex sidebar + map (Bootstrap handles most accordion chrome). */
+
+html,
+body,
+.wrapper {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  perspective: 1500px;
+}
+
+#accordion .mb-3 {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+#sidebar {
+  min-width: 200px;
+  max-width: 200px;
+  min-height: 100vh;
+  max-height: 100vh;
+  height: 100vh;
+  transition: all 500ms cubic-bezier(0.25, 0.25, 0.75, 0.75);
+  transform-origin: center left;
+}
+
+#sidebar.active {
+  margin-left: -200px;
+  transform: rotateY(100deg);
+}
+
+#content {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+#sidebarCollapse {
+  position: absolute;
+  top: 0;
+  z-index: 99999;
+}
+
+#sidebarCollapse::after {
+  content: '<';
+}
+
+#sidebarCollapse.active::after {
+  content: '>';
+}
+
+/* Fixed 40×40 box: matches DivIcon iconAnchor [20,20] (center = map anchor). */
+.fg-aircraft-symbol-wrap {
+  width: 40px;
+  height: 40px;
+  float: left;
+  position: relative;
+}
+
+/* Heading via CSS var so low-zoom scale can combine with rotate (see .mpmap-aircraft-small). */
+.fg-aircraft-marker > .fg-aircraft-symbol-wrap > .acicon {
+  transform: rotate(var(--ac-heading, 0deg));
+  transform-origin: center center;
+}
+
+/*
+ * Zoom ≤ 7: shrink sprite only. Scale the wrapper around its center so the geographic anchor
+ * (center of the 40×40 icon box) stays fixed — same as iconAnchor [20,20].
+ */
+.leaflet-container.mpmap-aircraft-small .fg-aircraft-marker > .fg-aircraft-symbol-wrap {
+  transform: scale(0.5);
+  transform-origin: center center;
+}
+
+.fg-aircraft-label {
+  color: #00ff00;
+  float: left;
+  background: #242;
+  opacity: 0.7;
+  padding: 1px 5px;
+  border: 1px solid gray;
+  border-radius: 5px;
+  font-size: 90%;
+  white-space: nowrap;
+}
+
+.fg-expired-ac {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+#pilotsList li {
+  font-size: 10px;
+  cursor: pointer;
+}
+
+#pilotsList li span:first-of-type {
+  font-weight: bold;
+}
+
+#pilotsList li span:last-of-type::before {
+  content: ' (';
+}
+
+#pilotsList li span:last-of-type::after {
+  content: ')';
+}
+
+#pilotsList li:hover {
+  background: #ccc;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotating {
+  animation: rotating 1s linear infinite;
+}
+
+#accordion .card-link {
+  color: #888;
+}
+
+#accordion .card-link:hover {
+  color: #000;
+}
+
+#accordion .card-header,
+#accordion .list-group-item {
+  padding: 0 1.25rem;
+}

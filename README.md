@@ -2,9 +2,9 @@
 A Multiplayer Map for FlightGear based on node.js
 
 ## Requirements
-* nodejs >= 6.0
+* nodejs >= 18 (Express 5)
 * permission to perform DNS lookup
-* permission to do outbound connects (telnet to mpserverXX on port 5001) 
+* permission to do outbound connects (telnet to mpserverXX on port 5001)
 
 ## Installation
 get software
@@ -15,9 +15,13 @@ enter into the directory
 
 	cd flightgear-mpmap.js
 
-install dependencies
+install dependencies (uses committed `package-lock.json`; run `npm install` locally after changing dependencies to refresh the lockfile)
 
-	npm install
+	npm ci
+
+optional local configuration (environment variables; loaded automatically via [dotenv](https://github.com/motdotla/dotenv) when you run `npm start`)
+
+	cp .env.example .env
 
 run
 
@@ -28,6 +32,16 @@ This will start the server on localhost, port 8080 and you should see the multip
 don't like 8080? Use another port like this
 
 	app_port=4711 npm start
+
+Optional environment variables:
+
+* `MPMAP_DEBUG_WS=1` — verbose WebSocket logs (otherwise only when `node_env=development`).
+* `MPMAP_SHUTDOWN_MS` — milliseconds before force-exit if graceful shutdown stalls (default 10000).
+* `MPMAP_EXPOSE_OBS=1` — enable `GET /api/obs` (WebSocket observer dump); disabled by default.
+* `MPMAP_ALLOW_ANY_MPSERVER=1` — allow any hostname and port range for MP status (disables SSRF-style host/port checks; not for public deployments).
+* `MPMAP_MPSERVER_HOST_SUFFIXES` — comma-separated hostname suffixes allowed for `/api/stat/:server` and WebSocket subscribe (default `flightgear.org`).
+* `MPMAP_MPSERVER_MIN_PORT` / `MPMAP_MPSERVER_MAX_PORT` — allowed TCP port range for MP status (defaults `5000`–`5999`).
+* `MPMAP_OPENAIP_API_KEY` — if set, enables the OpenAIP map overlay (key is not stored in the client bundle).
 
 ## Running within docker
 If you have docker and docker-compose installed, simply type
@@ -50,17 +64,14 @@ This software runs at [http://mpmap03.flightgear.org/](http://mpmap03.flightgear
 Contact the author(s) at the [flightgear-devel mailing list](https://sourceforge.net/projects/flightgear/lists/flightgear-devel "flightgear-devel")
 
 ## Contributing
-Contributions are welcome through the [gitlab project](https://gitlab.com/t3r/mpmap/) 
-or the [github project](https://github.com/t3r/mpmap.js/)
-or the [sourceforge project](https://sourceforge.net/p/flightgear/mpmap.js/). 
-If you want to support the running instance or any other FlightGear project requiring payed infrastructure, please [consider donating](https://liberapay.com/t3r). 
-Any amount helps.
+Contributions are welcome through the [gitlab project](https://gitlab.com/t3r/mpmap/)
+or the [github project](https://github.com/t3r/mpmap.js/).
 
 ## Legal stuff
 mpmap.js is licensed under the GPL 2.0 or later. See [LICENSE](LICENSE)
 
-Thanks to 
+Thanks to
 * the fantastic authors of [Leaflet.js](http://leafletjs.com) and it's plugins
-* the authors of jQuery. 
+* the authors of [Bootstrap](https://getbootstrap.com/) and [js-cookie](https://github.com/js-cookie/js-cookie)
 * [pigeon](http://pigeond.net) for the original fgmap software that inspired this version
 * the incredible [FlightGear](http://flightgear.org) community, especially the creators and maintainers of fgms

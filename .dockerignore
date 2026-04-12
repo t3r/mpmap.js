@@ -1,3 +1,6 @@
+.env
 node_modules
 npm_debug.log
+static/vite
+dist
 

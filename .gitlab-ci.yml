@@ -3,13 +3,22 @@ image: alpine:latest
 variables:
 
 stages:
-  - build
   - test
+  - build
   - review
   - staging
   - canary
   - production
   - cleanup
+
+test:
+  stage: test
+  image: node:22-alpine
+  script:
+    - npm ci
+    - npm test
+  only:
+    - branches
 
 build:
   stage: build

@@ -1,5 +1,8 @@
+.env
+dist
+pages-dist
 node_modules
+/static/vite
 npm-debug.log
 *.swp
 .project
-package-lock.json

@@ -1,9 +1,10 @@
 .acicon {
   width: 40px;
   height: 40px;
-  background-image: url('icons.png');
+  /* Root-relative: bundled CSS lives under /vite/assets/; a relative url would 404 there. */
+  background-image: url('/acicons/icons.png');
   background-repeat: no-repeat;
-}     
+}
 .acicon-a10-model {
   background-position: -2px -2px;
 }

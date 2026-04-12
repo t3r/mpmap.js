@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": false,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "noImplicitThis": false,
+    "types": ["vite/client", "leaflet", "leaflet.markercluster"]
+  },
+  "include": ["client/**/*.ts", "client/**/*.d.ts"]
+}

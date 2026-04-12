@@ -1,0 +1,58 @@
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot-yml-file
+
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
+    groups:
+      leaflet:
+        patterns:
+          - "leaflet*"
+      express-and-middleware:
+        patterns:
+          - "express*"
+          - "compression"
+          - "helmet"
+          - "morgan"
+          - "dotenv"
+          - "serve-favicon"
+          - "node-cache"
+      client-ui:
+        patterns:
+          - "bootstrap*"
+          - "@fortawesome/*"
+          - "js-cookie"
+      math3d:
+        patterns:
+          - "math3d"
+      vite-typescript:
+        patterns:
+          - "vite"
+          - "typescript"
+          - "tsx"
+      types:
+        patterns:
+          - "@types/*"
+      test:
+        patterns:
+          - "supertest"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
+    groups:
+      actions:
+        patterns:
+          - "*"
