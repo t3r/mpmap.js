@@ -23,9 +23,12 @@ const MODEL_ICON_BY_KEY: Record<string, string> = {
   c182: 'singleprop',
   dhc2: 'singleprop',
   pa28: 'singleprop',
+  pa38: 'singleprop',
+
   pc7: 'singleprop',
   j3cub: 'singleprop',
 
+  C208B: 'singleprop',
   c310: 'twinprop',
   Boeing314: 'twinprop',
   Lockheed1049: 'twinprop',
@@ -36,6 +39,9 @@ const MODEL_ICON_BY_KEY: Record<string, string> = {
   dc3: 'twinprop',
   fokker50: 'twinprop',
   SenecaII: 'twinprop',
+  DHC6: 'twinprop',
+  DHC6F: 'twinprop',
+  DHC6S: 'twinprop',
 
   Citation: 'smalljet',
   Bravo: 'smalljet',
