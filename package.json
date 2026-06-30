@@ -30,7 +30,7 @@
     "supertest": "^7.1.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
-    "vite": "^6.4.2"
+    "vite": "^6.4.3"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.4.0",
